@@ -1,0 +1,22 @@
+# 每月检查一次依赖更新，每类合并成一个 PR；CI 构建通过后直接合并即可
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ["*"]
+
+  - package-ecosystem: bundler
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      gems:
+        patterns: ["*"]
+    ignore:
+      # 大版本升级可能带来破坏性变化，留给每年一次的计划内升级
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
