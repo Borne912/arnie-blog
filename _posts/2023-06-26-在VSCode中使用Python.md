@@ -1,26 +1,12 @@
 ---
 title: 在 VS Code 中使用 Python
-date: 2023-06-26 11:05:25
+date: 2023-06-26 11:05:25 +0800
 categories:
   - Tools
 tags:
   - Python
   - VSCode
-excerpt: 
-excerpt_separator: <!--more-->
-header:
-  teaser: 
-  show_overlay_excerpt: false
-  tagline: 
-  overlay_image: /assets/images/unsplash-image-post-cover.jpg
-  overlay_filter: 0.5
-  caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
-  actions:
-    - label: 
-      url: https://unsplash.com
 ---
-# 在 VS Code 中使用 Python
-<!-- 摘要内容（首页显示） -->
 ## 基本介绍
 
 在之前的文章当中介绍了 Python 管理，本文主要在之前文章的基础上介绍如何在 Visual Studio Code 中使用 Python 3 创建、运行和调试 Python 程序以及如何使用虚拟环境、使用包等等[^1]。
@@ -31,7 +17,6 @@ header:
 - VS Code（版本: 1.79.1）
 - VS Code Python extension（Microsoft Python）[^3]
 <!--more-->
-<!-- 正文内容 -->
 ## 安装 Python 插件
 
 在 VS Code 中使用 Python，需要使用到 **Microsoft Python** 插件。该插件利用了 VS Code 来提供了下面这些功能：
@@ -42,15 +27,15 @@ header:
 
 在 VS Code 中安装插件非常的简单，只需要打开 VS Code，选择 "**扩展**"，在 "**扩展：商店**" 的搜索栏中输入 "Python"，选择相应的插件，点击 "安装"，即可：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231457428.png" alt="安装 Python 插件" style="zoom: 67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231457428-cc8d7305.png" alt="安装 Python 插件" style="zoom: 67%;" />
 
 安装完成插件之后，通常需要重启 VS Code，以启用安装的插件：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231502662.png" alt="重启 VS Code" style="zoom:67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231502662-fbeb5b1c.png" alt="重启 VS Code" style="zoom:67%;" />
 
 重启 VS Code 之后，打开**命令面板**（⇧⌘P），键入 "**Python**"，可以看到命令面板出现了一些下拉选项，说明插件安装成功：
 
-![Python 插件](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231509330.png)
+![Python 插件](../assets/images/posts/2023-06-26/Obsidian202306231509330-b31b5bb6.png)
 
 ## 使用 Python 的常规流程
 
@@ -76,35 +61,35 @@ Python 开发者的最佳实践是使用特定于项目的 `virtual environment`
 
 打开**命令面板** ( `⇧⌘P` )，开始键入 **Python: Create Environment** 命令进行搜索，然后选择该命令。该命令显示环境类型列表，Venv 或 Conda。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231515462.png" alt="Python: Create Environment" style="zoom: 50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231515462-bed24438.png" alt="Python: Create Environment" style="zoom: 50%;" />
 
 下面将以 Conda 为例，展示创建虚拟环境的过程，Venv 与 Conda 的过程基本一样：
 
 对于显示环境类型列表，Venv 或 Conda，选择 Conda
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231518409.png" alt="环境类型列表" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231518409-7efadaeb.png" alt="环境类型列表" style="zoom:50%;" />
 
 然后该命令会显示可用于项目的解释器列表，选择需要的解释器
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231521846.png" alt="解释器列表" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231521846-fabe6e42.png" alt="解释器列表" style="zoom:50%;" />
 
 选择解释器后，将显示一条通知，显示环境创建的进度
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231523107.png" alt="image-20230623152357056" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231523107-cca97d6f.png" alt="image-20230623152357056" style="zoom:50%;" />
 
 并且环境文件夹 ( `/.conda` ) 将出现在工作区中
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231526411.png" alt=".conda 文件夹" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231526411-97372551.png" alt=".conda 文件夹" style="zoom:50%;" />
 
 ### Step 3：创建 Python 源文件
 
 从文件资源管理器工具栏中，选择 `hello` 文件夹上的新建文件按钮：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231536552.png" alt="新建 hello 文件" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231536552-e04459ed.png" alt="新建 hello 文件" style="zoom:50%;" />
 
 将文件命名为 `hello.py` ，VS Code 会自动在编辑器中打开它：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231538824.png" alt="打开 hello 文件夹" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231538824-8382bf90.png" alt="打开 hello 文件夹" style="zoom:50%;" />
 
 通过使用 `.py` 文件扩展名，告诉 VS Code 将此文件解释为 Python 程序，以便它使用 Python 扩展名和选定的解释器评估内容。
 
@@ -119,7 +104,7 @@ print(msg)
 
 当开始输入 `print` 时，请注意 **IntelliSense** 如何显示 "自动补全（Auto-completion）" 选项
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231548857.png" alt="IntelliSense" style="zoom: 33%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231548857-07b81713.png" alt="IntelliSense" style="zoom: 33%;" />
 
 **IntelliSense** 和 "自动补全" 适用于：
 
@@ -129,7 +114,7 @@ print(msg)
 
 例如，由于 `msg` 变量包含字符串，因此当您键入 `msg.` 时，**IntelliSense** 会提供字符串方法：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231553899.png" alt="对象类型上可用的方法" style="zoom: 33%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231553899-fcf276b9.png" alt="对象类型上可用的方法" style="zoom: 33%;" />
 
 最后，保存文件 ( `⌘S` )。此时，就已准备好在 VS Code 中运行第一个 Python 文件。
 
@@ -137,16 +122,16 @@ print(msg)
 
 单击编辑器右上角的 **Run Python File in Terminal** 运行按钮。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231603244.png" alt="Run Python File in Terminal" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231603244-dfcdaf3d.png" alt="Run Python File in Terminal" style="zoom:50%;" />
 
 该按钮会打开一个终端面板，其中会自动激活 Python 解释器，然后运行 `python3 hello.py` (macOS/Linux) 或 `python hello.py` (Windows)：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231606957.png" alt="终端面板运行 Python" style="zoom:50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231606957-5c0c54f3.png" alt="终端面板运行 Python" style="zoom:50%;" />
 
 还可以通过其他三种方式在 VS Code 中运行 Python 代码：
 
 1. 右键单击编辑器窗口中的任意位置，然后选择 **Run > Python File in Terminal**（这会自动保存文件）
-   ![](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231610631.png)
+   ![](../assets/images/posts/2023-06-26/Obsidian202306231610631-2708195f.png)
 
 2. 选择一行或多行，然后按 `Shift+Enter` 或右键单击并选择 **在 Python 终端中运行选择/行**。该命令对于仅测试文件的一部分非常方便
 
@@ -158,11 +143,11 @@ print(msg)
 
 首先，通过将光标放在 `print` 调用上并按 `F9`，在 `hello.py` 的第 2 行设置断点。或者，单击编辑器左侧的行号旁边的装订线。设置断点时，装订线中会出现一个红色圆圈。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231625206.png" alt="Setting a breakpoint in hello.py" style="zoom:67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231625206-4f874dc7.png" alt="Setting a breakpoint in hello.py" style="zoom:67%;" />
 
 接下来，要初始化调试器，请按 `F5`。由于这是第一次调试此文件，配置菜单将从命令面板打开，允许为打开的文件选择想要的调试配置类型。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231628860.png" alt="Debug configurations after launch.json is created" style="zoom: 33%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231628860-9966982c.png" alt="Debug configurations after launch.json is created" style="zoom: 33%;" />
 
 > Notes：VS Code 的所有各种配置都使用 JSON 文件，launch.json 是包含调试配置的文件的标准名称。
 
@@ -170,15 +155,15 @@ print(msg)
 
 通过单击编辑器上运行按钮旁边的向下箭头并在终端中选择调试 Python 文件来启动调试器。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231632078.png" alt="Using the debug Python file in terminal button" style="zoom: 50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231632078-fd3f2373.png" alt="Using the debug Python file in terminal button" style="zoom: 50%;" />
 
 调试器将在文件断点的第一行停止。当前行在左边距中用黄色箭头指示。如果此时检查局部变量窗口，将看到现在已定义的 msg 变量出现在局部窗格中。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231634278.png" alt="Debugging step 2 - variable defined" style="zoom: 50%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231634278-54b044b2.png" alt="Debugging step 2 - variable defined" style="zoom: 50%;" />
 
 调试工具栏出现在顶部，从左到右有以下命令：继续 (`F5`)、跳过 (`F10`)、进入 (`F11`)、退出 (`⇧F11`)、重新启动 (`⇧⌘F5`) 和停止 (`⇧F5`）。
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231637136.png" alt="Debugging toolbar"  />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231637136-65168324.png" alt="Debugging toolbar"  />
 
 状态栏也会改变颜色（在许多主题中为橙色）以指示您处于调试模式。 **Python 调试控制台**也会自动出现在右下面板中，以显示正在运行的命令以及程序输出。要继续运行程序，请选择调试工具栏 (`F5`) 上的继续命令。调试器将程序运行到最后。
 
@@ -192,7 +177,7 @@ msg.capitalize()
 msg.split()
 ```
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306231643679.png" alt="Debugging step 3 - using the debug console" style="zoom: 67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306231643679-8f0745e8.png" alt="Debugging step 3 - using the debug console" style="zoom: 67%;" />
 
 再次选择工具栏上的蓝色继续按钮（或按 `F5`）以运行程序直至完成。如果切换回 Python 调试控制台，`Roll a dice!` 会出现在 Python 调试控制台中，一旦程序完成，VS Code 就会退出调试模式。
 
@@ -234,21 +219,21 @@ conda install numpy
 
 要初始化调试配置，首先选择侧栏中的 "运行和调试(⇧⌘D)" 视图：
 
-![Run icon](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251044898.png)
+![Run icon](../assets/images/posts/2023-06-26/Obsidian202306251044898-a43f25c9.png)
 
 如果当前尚未定义任何配置，将看到一个用于运行和调试的按钮以及一个用于创建配置 (`launch.json`) 文件的链接：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251045931.png" alt="Debug toolbar settings command" style="zoom: 58%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306251045931-b08e1e17.png" alt="Debug toolbar settings command" style="zoom: 58%;" />
 
 要使用 Python 配置生成 `launch.json` 文件，需要执行以下步骤：
 
 1. 选择 **create a launch.json file** 的链接（如上图所示），或者打开命令面板（`⇧⌘P`）,键入 "Debug: Add Configuration"，选择并回车
 
-	![](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251059764.png)
+	![](../assets/images/posts/2023-06-26/Obsidian202306251059764-cde3ffaf.png)
 
 2. 配置菜单将从命令面板中打开，允许为打开的文件选择所需的调试配置类型。现在，在出现的 "Select a debug configuration" 菜单中，选择 "Python File"
 
-   ![](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251051522.png)
+   ![](../assets/images/posts/2023-06-26/Obsidian202306251051522-585c26b8.png)
 
    > Notes：在不存在配置的情况下，通过调试面板、`F5` 或 **运行 > 开始调试** 启动调试会话也会显示调试配置菜单，但不会创建 `launch.json` 文件（就是前一节中，"Step 5：配置并运行调试器"所展示的那样，并不会创建 `launch.json` 文件）
 
@@ -258,15 +243,15 @@ conda install numpy
 
 默认情况下，VS Code 仅显示 Python 扩展提供的最常见配置。可以使用列表中显示的 "Add Configuration" 命令和 `launch.json` 编辑器来选择要包含在 `launch.json` 中的其他配置。当使用该命令时，VS Code 会提示和提供所有可用配置的列表（请务必选择 Python 选项）：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251104814.png" alt="Adding a new Python debugging configuration" style="zoom: 67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306251104814-4e328c14.png" alt="Adding a new Python debugging configuration" style="zoom: 67%;" />
 
 选择 "Attach using Process ID" 会产生以下结果：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251107673.png" alt="Added a configuration" style="zoom:67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306251107673-f9b7437a.png" alt="Added a configuration" style="zoom:67%;" />
 
 调试期间，状态栏显示当前配置和当前调试解释器。选择配置会弹出一个列表，可以从中选择不同的配置：
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306251108172.png" alt="Debugging Status Bar" style="zoom:67%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306251108172-9b17e059.png" alt="Debugging Status Bar" style="zoom:67%;" />
 
 默认情况下，调试器使用为工作区选择的相同解释器，就像 VS Code 的 Python 扩展的其他功能一样。要专门使用不同的解释器进行调试，请为适用的调试器配置设置 `launch.json` 中 `python` 的值。或者，在状态栏上选择指定的解释器以选择其他解释器。
 
@@ -299,7 +284,7 @@ conda install numpy
 
 #### `name`：提供 VS Code 下拉列表中显示的调试配置的名称
 
-<img src="https://raw.githubusercontent.com/Yapwn/BlogDataBase/master/Obsidian202306251118025.png" alt="调试配置的名称" style="zoom: 40%;" />
+<img src="../assets/images/posts/2023-06-26/Obsidian202306251118025-976299f5.png" alt="调试配置的名称" style="zoom: 40%;" />
 
 #### `type`：标识要使用的调试器类型
 

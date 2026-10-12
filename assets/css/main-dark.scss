@@ -1,0 +1,10 @@
+---
+# 暗色样式：由 _includes/head/custom.html 按系统深浅色设置加载
+search: false
+---
+@charset "utf-8";
+
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin_dark | default: 'dark' }}"; // 暗色皮肤
+@import "vars";
+@import "minimal-mistakes";
+@import "custom";

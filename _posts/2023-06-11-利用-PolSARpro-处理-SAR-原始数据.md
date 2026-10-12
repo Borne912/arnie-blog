@@ -1,24 +1,10 @@
 ---
 title: 利用 PolSARpro 处理 SAR 原始数据
-date: 2023-06-11 15:07:45
+date: 2023-06-11 15:07:45 +0800
 categories:
   - Research
 tags: 
-excerpt: 
-excerpt_separator: <!--more-->
-header:
-  teaser: 
-  show_overlay_excerpt: false
-  tagline: 
-  overlay_image: /assets/images/unsplash-image-post-cover.jpg
-  overlay_filter: 0.5
-  caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
-  actions:
-    - label: 
-      url: https://unsplash.com
 ---
-# 利用 PolSARpro 处理 SAR 原始数据
-<!-- 摘要内容（首页显示） -->
 ## 基本介绍
 
 不同的卫星，比如：
@@ -31,7 +17,6 @@ header:
 
 下面，将以 Radarsat-2 卫星的 SAR 数据为例，讲解 SAR 原始数据的处理过程。
 <!--more-->
-<!-- 正文内容 -->
 ## Radarsat-2 数据格式
 
 以 Radarsat-2 卫星为例，其所有数据产品均为 `GeoTIFF` 格式。产品一般由三大部分组成：
@@ -40,11 +25,11 @@ header:
 - 一至四个 `TIFF` 格式图像数据文件（Image Pixel Data File）
 - 若干辅助文件或目录（Support File）
 
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111017909.png" alt="RADARSAT-2卫星数据产品组成" style="zoom: 80%;" />
+<img src="../assets/images/posts/2023-06-11/Obsidian202306111017909-c9a2e8c9.png" alt="RADARSAT-2卫星数据产品组成" style="zoom: 80%;" />
 
 RADARSAT-2 卫星具体的数据产品文件组成，如下图所示：
 
-![RADARSAT-2 卫星数据产品文件组成](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111032497.png)
+![RADARSAT-2 卫星数据产品文件组成](../assets/images/posts/2023-06-11/Obsidian202306111032497-b6e90db8.png)
 
 ### 产品信息文件
 
@@ -76,51 +61,51 @@ RADARSAT-2 卫星产品当中的图像数据文件均为 `GeoTIFF` 图像，每�
 
 1. 打开 PolSARpro 软件，进入到 PolSAR 数据处理工具集主界面，选择 "PolSARpro Bio"
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111104467.png" alt="image-20230611110445428" style="zoom:40%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111104467-4e5f70e7.png" alt="image-20230611110445428" style="zoom:40%;" />
 
    接着，点击 "进入(Enter)"，来到 PolSARpro 工具界面
 
-   ![image-20230611110739579](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111107623.png)
+   ![image-20230611110739579](../assets/images/posts/2023-06-11/Obsidian202306111107623-3f258f19.png)
 
 1. 点击"环境(Environment)"，选择"单一数据集(Single Data Set(Pol-SAR))"
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111121175.png" alt="image-20230611112124126" style="zoom:80%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111121175-68a61693.png" alt="image-20230611112124126" style="zoom:80%;" />
 
 2. 选择数据存放的路径，"保存&退出(Save & Exit)"，之后会弹出一个提示，点击"确定(yes)"
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111125095.png" alt="image-20230611112526044" style="zoom:80%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111125095-2020d42b.png" alt="image-20230611112526044" style="zoom:80%;" />
 
-   <img src="https://raw.githubusercontent.com/Yapwn/BlogDataBase/master/Obsidian202306111128240.png" alt="image-20230611112800189" style="zoom:80%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111128240-d444e1c1.png" alt="image-20230611112800189" style="zoom:80%;" />
 
 3. 从"导入(import)"菜单中，找到 RadarSAT-2 全极化(根据要处理的数据的类型选择即可)
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111132547.png" alt="image-20230611113213496" style="zoom: 50%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111132547-de04a4d3.png" alt="image-20230611113213496" style="zoom: 50%;" />
 
 4. 配置 product.xml 文件的路径
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111229332.png" alt="image-20230611122920284" style="zoom:50%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111229332-a0ce22ca.png" alt="image-20230611122920284" style="zoom:50%;" />
 
 5. 点击 "读取数据头文件(Read Header)"，在弹出的提示框中，点击"确认(OK)"
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111233770.png" alt="image-20230611123356719" style="zoom: 40%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111233770-8f3458c4.png" alt="image-20230611123356719" style="zoom: 40%;" />
 
 6. 之后，在"输入数据文件(Input Data File)"选项区部分就会显示，四种极化方式(全极化)下对应的文件，点击"确认(OK)"，之后会再次弹出一个提示框，同样点击"确认(OK)"即可
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111241169.png" alt="image-20230611124120108" style="zoom:50%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111241169-d920454c.png" alt="image-20230611124120108" style="zoom:50%;" />
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111244054.png" alt="image-20230611124426999" style="zoom:50%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111244054-21484ad3.png" alt="image-20230611124426999" style="zoom:50%;" />
 
 7. 点击 "import(导入)" 菜单，选择 "提取 PolSAR 图像(Extract PolSAR images)"
 
-   <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111247708.png" alt="image-20230611124706634" style="zoom: 67%;" />
+   <img src="../assets/images/posts/2023-06-11/Obsidian202306111247708-30e57f67.png" alt="image-20230611124706634" style="zoom: 67%;" />
 
 8. 在 "Output Data Format" 选项区部分选择 "Sinclair Elements" - "[S2]"，点击 "运行(Run)"，并在弹出的提示框中点击 "确认(yes)"，即可提取出 S 矩阵
 
-   ![](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111254308.png)
+   ![](../assets/images/posts/2023-06-11/Obsidian202306111254308-670b090d.png)
 
 9.  处理完成后，文件目录下会多出如下图所示的文件：
 
-    <img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306111336578.png" alt="image-20230611133630514" style="zoom:50%;" />
+    <img src="../assets/images/posts/2023-06-11/Obsidian202306111336578-89f13039.png" alt="image-20230611133630514" style="zoom:50%;" />
 
     由红框标出的部分就是我们需要的 S 矩阵，可以进一步导入到 Matlab 或 Python 中处理。
 

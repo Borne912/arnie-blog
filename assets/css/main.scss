@@ -1,11 +1,11 @@
---- 
-# Only the main Sass file needs front matter (the dashes are enough) 
-search: false 
---- 
+---
+# Only the main Sass file needs front matter (the dashes are enough)
+search: false
+---
 @charset "utf-8";
 
-@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // skin
-
-@import "minimal-mistakes"; // main partials
-
+@import "minimal-mistakes/skins/{{ site.minimal_mistakes_skin | default: 'default' }}"; // 亮色皮肤
+@import "vars";
+$code-background-color: #e9ecef;
+@import "minimal-mistakes"; // 主题自带的全部样式
 @import "custom";

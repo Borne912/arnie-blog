@@ -1,0 +1,8 @@
+# Pagefind 搜索索引配置：只索引文章正文（_plugins/blog_tweaks.rb 给文章加了 data-pagefind-body）
+site: _site
+exclude_selectors:
+  - ".toc"
+  - ".page__meta"
+  - ".page__share"
+  - ".page__comments"
+  - ".page__hero"

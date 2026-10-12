@@ -1,30 +1,16 @@
 ---
 title: Minimal Mistakes 实战配置
-date: 2025-03-31T09:28:28+08:00
+date: 2025-03-31 09:28:28 +0800
 categories:
   - Tools
 tags: 
 excerpt: 前段时间，利用空闲搭建了一个博客，使用的是 Jekyll + Minimal Mistakes + GitHub Pages 的方案，在 Jekyll 框架 Minimal Mistakes 主题的基础上进行了一些个性化的配置，为了后续改动方便，防止遗忘，写篇文章记录一下。
-excerpt_separator: <!--more-->
-header:
-  teaser: 
-  show_overlay_excerpt: false
-  tagline: 
-  overlay_image: /assets/images/unsplash-image-post-cover.jpg
-  overlay_filter: 0.5
-  caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
-  actions:
-    - label: 
-      url: https://unsplash.com
 ---
-# Minimal Mistakes 实战配置
-<!-- 摘要内容（首页显示） -->
 ## 前置要求(Prerequisites)
 
 > 注意：进行 Jekyll 主题 Minimal Mistakes 配置的前提是 Jekyll 的本地环境已经搭建好了，即：能够在本地通过运行 `bundle exec jekyll serve` 启动一个网站。这样才能在 Minimal Mistakes 配置过程中方便进行调试。
 
 <!--more-->
-<!-- 正文内容 -->
 下面简单贴出 Jekyll 配置过程中的关键文件，
 
 ```sh
@@ -162,11 +148,11 @@ $ ALGOLIA_API_KEY=your_admin_api_key bundle exec jekyll algolia
 
 配置严格按照[网站](https://www.google.com/webmasters/tools/)给出的步骤来即可，关键就是完成配置之后 `google_site_verification` 应该上哪去找，在 [Google Search Console](https://search.google.com/search-console/) 的配置页面，依次选择【设置 - 用户和权限】，找到用户一栏，点击三个点，
 
-![Google Search Console](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503182056794.png)
+![Google Search Console](../assets/images/posts/2025-03-31/202503182056794-b480d665.png)
 
 在弹出的选项框中，选择【所有权验证详情】，即可找到 `google-site-verification`，
 
-![Google Search Console-所有权验证详情](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503182057266.png)
+![Google Search Console-所有权验证详情](../assets/images/posts/2025-03-31/202503182057266-c0d31a36.png)
 
 > 注意：可以通过 [Google Analytics](https://analytics.google.com/) 验证网站所有权，就可能不需要配置 Google Search Console。
 
@@ -174,9 +160,9 @@ $ ALGOLIA_API_KEY=your_admin_api_key bundle exec jekyll algolia
 
 [必应站长工具](https://www.bing.com/webmasters)（Bing Webmaster Tools）可以通过前面配置的 Google 搜索控制台（Google Search Console）进行验证，所以必应站长工具不再需要验证代码。
 
-![Bing Webmaster Tools](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503190844214.png)
+![Bing Webmaster Tools](../assets/images/posts/2025-03-31/202503190844214-a545d330.png)
 
-![Bing Webmaster Tools-Verification Code](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503190845739.png)
+![Bing Webmaster Tools-Verification Code](../assets/images/posts/2025-03-31/202503190845739-ae47bb74.png)
 
 ## 分析(Analytics)
 
@@ -340,7 +326,7 @@ main:
 
 对于宽页面，如果页面包含目录，它将不再出现在右侧。相反，它将被强制放入主内容容器中，紧接在页面标题之后。
 
-![Minimal Mistakes 宽页面](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503191620103.png)
+![Minimal Mistakes 宽页面](../assets/images/posts/2025-03-31/202503191620103-cfcba6ba.png)
 
 经过一番取舍之后，还是决定保留目录设置，去掉宽页面设置。
 
@@ -461,7 +447,7 @@ defaults:
 
 首先，先说一下，关于侧边栏社交链接的修改和配置，
 
-![Social link in author profile with color](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503192028474.png)
+![Social link in author profile with color](../assets/images/posts/2025-03-31/202503192028474-daacad31.png)
 
 - 添加侧边栏社交链接只需要在下面所示的 `/_config.yml` 文件对应位置处添加相应的条目即可。比如：以知乎为例进行说明，
 
@@ -505,7 +491,7 @@ defaults:
 
 接着，来修改一下 `post` 底部社交分享链接配置，
 
-![default social share link buttons](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503192043615.png)
+![default social share link buttons](../assets/images/posts/2025-03-31/202503192043615-8b791ae4.png)
 
 - 添加社交分享链接只需要在 `/_includes/social-share.html` 文件对应位置处添加条目即可。比如: 以微信为例，
 
@@ -539,7 +525,7 @@ defaults:
   $wechat-color: #50B674 !default; // 为变量 $coffee-color 赋值
   ```
 
-  ![微信 button 配置效果展示](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503201410321.png)
+  ![微信 button 配置效果展示](../assets/images/posts/2025-03-31/202503201410321-269b4fd4.png)
 
 > 注意，可能需要在 `/config.yml` 文件中的 `include` 处添加如下内容才能在最终的网站中展示 `scss` 配置的结果，
 >
@@ -679,7 +665,7 @@ defaults:
 
   最后的效果，
 
-  ![配置知识共享许可协议](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503211030918.png)
+  ![配置知识共享许可协议](../assets/images/posts/2025-03-31/202503211030918-0c0fcd54.png)
 
   > 注意，要让 `/_sass/custom.scss` 文件生效，还需要在 `/assets/css/main.scss` 文件中对其进行导入，
   >
@@ -871,7 +857,7 @@ search: false
 
 2. 在网站对应的 GitHub 仓库中配置 `secrets.ALGOLIA_ADMIN_KEY`，依次选择【Settings - Secrets and variables- Actions - New repository secret】，创建 `ALGOLIA_ADMIN_KEY` 密钥（注意：不要选择成创建环境密钥了）
 
-   ![GitHub Actions 添加密钥](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503211536086.png)
+   ![GitHub Actions 添加密钥](../assets/images/posts/2025-03-31/202503211536086-056540b5.png)
 
 3. 在主题配置文件 `/_config.yml` 中再对 `algolia` 进行一些额外的配置(可选)，也可以通过 [Algolia](https://www.algolia.com/) 网站直接进行设置，
 
@@ -888,7 +874,7 @@ search: false
 
 最后，当每次将修改好的文件 `push` 到网站远程的 GitHub 仓库中时，Algolia 搜索就会根据新增内容自动重建索引。
 
-![GitHub Actions 自动重建索引](https://raw.githubusercontent.com/DlronA/BlogDataBase/master/202503211541254.png)
+![GitHub Actions 自动重建索引](../assets/images/posts/2025-03-31/202503211541254-c2d520e7.png)
 
 ### 数学公式适配
 

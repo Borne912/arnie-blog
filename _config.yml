@@ -13,7 +13,7 @@
 theme                  : "minimal-mistakes-jekyll"
 # remote_theme           : "mmistakes/minimal-mistakes"
 minimal_mistakes_skin    : "default" # "default"(default), "air", "aqua", "contrast", "dark", "dirt", "neon", "mint", "plum", "sunrise"
-minimal_mistakes_skin_dark: "dark"
+minimal_mistakes_skin_dark: "dark" # 系统处于暗色模式时使用（assets/css/main-dark.scss）
 
 # Site Settings
 locale                   : "zh-CN" # "en-US"(default), zh-CN
@@ -69,7 +69,7 @@ reCaptcha:
 atom_feed:
   path                   : # blank (default) uses feed.xml
   hide                   : # true, false (default)
-search                   : false # true, false (default). 暂时关闭，之后改用 Pagefind
+search                   : false # 主题自带的搜索不支持中文分词，改用 /search/ 页面（Pagefind）
 search_full_content      : # true, false (default)
 search_provider          : # lunr (default), algolia, google
 lunr:
@@ -177,10 +177,7 @@ footer:
 
 # Reading Files
 include:
-  - .htaccess
   - _pages
-  - _sass
-  - assets
 exclude:
   - "*.sublime-project"
   - "*.sublime-workspace"
@@ -208,11 +205,13 @@ exclude:
   - tmp
   - /docs # ignore Minimal Mistakes /docs
   - /test # ignore Minimal Mistakes /test
+  - pagefind.yml
 keep_files:
   - .git
   - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+strict_front_matter: true # front matter 写错时构建直接失败（会收到邮件），而不是丢掉整段把草稿发布出去
 
 
 # Conversion
@@ -248,6 +247,10 @@ kramdown:
 sass:
   sass_dir: _sass
   style: compressed # https://sass-lang.com/documentation/file.SASS_REFERENCE.html#output_style
+  sourcemap: never
+  # 弃用警告都来自主题本身，与本站无关；锁定的依赖版本保证构建不会因此失败
+  quiet_deps: true
+  silence_deprecations: [import, global-builtin, slash-div, if-function, color-functions]
 
 
 # Outputting
@@ -353,7 +356,13 @@ defaults:
       show_date: true
       toc: true
       toc_sticky: true
-      mathjax: true
+      render_with_liquid: false # 文章里的 {{ }} / {% %} 原样显示，不当作模板执行
+      excerpt_separator: "<!--more-->" # 首页摘要取到这个标记为止
+      header: # 默认头图；个别文章可在自己的 front matter 里覆盖
+        overlay_image: /assets/images/unsplash-image-post-cover.jpg
+        overlay_filter: 0.5
+        show_overlay_excerpt: false
+        caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
       #classes: wide
   # _pages
   - scope:

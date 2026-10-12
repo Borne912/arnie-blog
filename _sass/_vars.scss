@@ -1,0 +1,7 @@
+// 站点级变量：只覆盖主题里带 !default 的变量，不再复制主题文件
+// 中文使用系统字体（苹方 / 微软雅黑 / 思源黑体），不再加载 Web 字体
+$system-cjk: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB",
+  "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", "Segoe UI", Roboto,
+  "Helvetica Neue", Arial, sans-serif;
+$sans-serif: $system-cjk;
+$serif: $system-cjk;
