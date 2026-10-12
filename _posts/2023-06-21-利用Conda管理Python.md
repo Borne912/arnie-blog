@@ -1,26 +1,12 @@
 ---
 title: 利用Conda管理Python(包+版本+环境)
-date: 2023-06-21 10:09:52
+date: 2023-06-21 10:09:52 +0800
 categories:
   - Tools
 tags:
   - Python
   - Anaconda
-excerpt: 
-excerpt_separator: <!--more-->
-header:
-  teaser: 
-  show_overlay_excerpt: false
-  tagline: 
-  overlay_image: /assets/images/unsplash-image-post-cover.jpg
-  overlay_filter: 0.5
-  caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
-  actions:
-    - label: 
-      url: https://unsplash.com
 ---
-# 利用Conda管理Python(包+版本+环境)
-<!-- 摘要内容（首页显示） -->
 ## 基本介绍
 Python 的管理涉及的以下三个方面：
 
@@ -32,7 +18,6 @@ Python 的管理涉及的以下三个方面：
 
 而对 conda 来说，它的 python **版本管理**和**环境管理**联系比较紧密，不太适合分开来介绍，故临时决定将 python 的版本管理和环境管理放到一起说，也就是这篇文章。
 <!--more-->
-<!-- 正文内容 -->
 ### 为什么需要 Python 版本管理
 
 Pyhton 版本管理的价值在于将系统需要的 Python 和 开发需要的 Python 分隔开：
@@ -88,7 +73,7 @@ Conda 是一个运行在 Windows、MacOS 和 Linux 上的开源包管理系统�
 - Conda：一个开源的**包管理**系统和**环境管理**系统，用于安装多种语言的软件包
 
 如果用 Linux 操作系统来比喻的话，Conda 相当于 Linus Torvalds 最初写的最原始的 Linux 内核，而 Miniconda 就相当于 min Linux，最后是 Anaconda 就相当于 Linux 的各种发行版，比如：Ubuntu，CentOS等等。
-<img src="https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306181716277.png" alt="image-20230618171658097" style="zoom: 67%;" />
+<img src="../assets/images/posts/2023-06-21/Obsidian202306181716277-fc43919b.png" alt="image-20230618171658097" style="zoom: 67%;" />
 
 ### 安装 Miniconda
 
@@ -457,7 +442,7 @@ SEARCH_PATH += (
 
 - Environment variables：通过环境变量进行配置的优先级最高
 
-![Conda Config Precedence](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201041501.png)
+![Conda Config Precedence](../assets/images/posts/2023-06-21/Obsidian202306201041501-0f8861d0.png)
 
 ### 常用配置
 
@@ -602,31 +587,31 @@ $ conda remove beautifulsoup4
 
 ### Quick Start
 
-![QUICK START](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201743570.png)
+![QUICK START](../assets/images/posts/2023-06-21/Obsidian202306201743570-20afa95f.png)
 
 ### Channels and Packages
 
-![CHANNELS AND PACKAGES](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201744337.png)
+![CHANNELS AND PACKAGES](../assets/images/posts/2023-06-21/Obsidian202306201744337-12463b6c.png)
 
 ### Working with Conda Environments
 
-![WORKING WITH CONDA ENVIRONMENTS](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201745277.png)
+![WORKING WITH CONDA ENVIRONMENTS](../assets/images/posts/2023-06-21/Obsidian202306201745277-deba2907.png)
 
 ### Environment Management
 
-![ENVIRONMENT MANAGEMENT](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201746760.png)
+![ENVIRONMENT MANAGEMENT](../assets/images/posts/2023-06-21/Obsidian202306201746760-64ebf7c0.png)
 
 ### Exporting Environments
 
-![EXPORTING ENVIRONMENTS](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201748007.png)
+![EXPORTING ENVIRONMENTS](../assets/images/posts/2023-06-21/Obsidian202306201748007-84e6cefd.png)
 
 ### Importing Environments
 
-![IMPORTING ENVIRONMENTS](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201751023.png)
+![IMPORTING ENVIRONMENTS](../assets/images/posts/2023-06-21/Obsidian202306201751023-6c6d491b.png)
 
 ### Additional Hints
 
-![ADDITIONAL HINTS](https://raw.githubusercontents.com/Yapwn/BlogDataBase/master/Obsidian202306201752891.png)
+![ADDITIONAL HINTS](../assets/images/posts/2023-06-21/Obsidian202306201752891-fdab22f2.png)
 
 ## 参考
 

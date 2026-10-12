@@ -4,8 +4,8 @@
     /* 居中对齐 */
     font-size: 14px;
     /* 适当调整字体大小 */
-    color: #555;
-    /* 提高对比度 */
+    color: mix($text-color, $background-color, 75%);
+    /* 随亮色/暗色皮肤自动调整，保证对比度 */
     padding: 15px 0;
     /* 增加上下间距 */
 }
@@ -39,21 +39,6 @@
     opacity: 1;
 }
 
-// 自定义中文字体
-// 使用思源黑体（Noto Sans SC）
-@font-face {
-    font-family: "Noto Sans SC";
-    src: url("../fonts/NotoSansSC-Regular.ttf") format("opentype");
-    font-weight: normal;
-}
-
-@font-face {
-    font-family: "Noto Sans SC";
-    src: url("../fonts/NotoSansSC-Bold.ttf") format("opentype");
-    font-weight: bold;
-}
-
-
 // 让正文字体稍微大一些，行距保持舒适
 .page__content p,
 .page__content li,
@@ -85,4 +70,26 @@
 .page__content code,
 .page__content pre {
     font-size: 16px !important;
+}
+
+// 分享按钮、社交图标的品牌色（主题没有这几种，原先靠复制整份 _buttons.scss / _utilities.scss 实现）
+$brand-colors: (wechat: #50B674, zhihu: #0084FF, coffee: #FFD700);
+
+@each $name, $color in $brand-colors {
+    .btn--#{$name},
+    .btn--#{$name}:visited {
+        @include yiq-contrasted($color);
+    }
+
+    .btn--#{$name}:hover {
+        @include yiq-contrasted(mix(#000, $color, 20%));
+    }
+}
+
+.social-icons {
+    .fa-weixin { color: #50B674; }
+    .fa-zhihu { color: #0084FF; }
+    .fa-square-envelope { color: #2B6FD6; }
+    .fa-telegram { color: #0088CC; }
+    .fa-mug-hot { color: #FFD700; }
 }

@@ -4,3 +4,8 @@ _site
 vendor
 .bundle
 .jekyll-cache
+.DS_Store
+# Obsidian：只共享 app.json（新文章位置、图片保存位置、链接格式）；插件和工作区状态留在本机，
+# 尤其是插件的 data.json 里可能有公众号 AppSecret 之类的密钥
+.obsidian/*
+!.obsidian/app.json

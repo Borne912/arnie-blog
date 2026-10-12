@@ -5,9 +5,7 @@ name: Deploy Jekyll site to Pages
 
 on:
   push:
-    # 默认分支改名（master → main）的过渡期同时监听两者；实际只有默认分支会部署，见 deploy 的 if。
-    # 改名后还要在 Settings → Environments → github-pages 里把允许部署的分支改成 main
-    branches: ["main", "master"]
+    branches: ["main"]
   pull_request:
   workflow_dispatch:
 
@@ -42,6 +40,9 @@ jobs:
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+      - name: Build search index (Pagefind)
+        continue-on-error: true # 搜索索引出问题也不阻塞发布
+        run: npx -y pagefind@1.5.2
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
 

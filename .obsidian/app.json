@@ -1,0 +1,16 @@
+{
+  "newFileLocation": "folder",
+  "newFileFolderPath": "_posts",
+  "attachmentFolderPath": "assets/images/posts",
+  "newLinkFormat": "relative",
+  "useMarkdownLinks": true,
+  "alwaysUpdateLinks": true,
+  "userIgnoreFilters": [
+    "_site/",
+    ".jekyll-cache/",
+    "vendor/",
+    "assets/vendor/",
+    "_plugins/",
+    ".github/"
+  ]
+}

@@ -19,6 +19,9 @@ main:
   - title: "Tags"
     url: /tags/
     description: "按标签归档已发表的文章"
+  - title: "Search"
+    url: /search/
+    description: "全文搜索"
   - title: "About"
     url: /about/
     description: "网站作者的一些碎碎念"

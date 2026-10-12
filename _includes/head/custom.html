@@ -1,7 +1,6 @@
 <!-- start custom head snippets -->
 
-<!-- insert favicons. use https://realfavicongenerator.net/ -->
-<!-- 设置网站 favicons 图标-->
+<!-- 设置网站 favicons 图标（https://realfavicongenerator.net/） -->
 <link rel="icon" type="image/png" href="/assets/favicons/favicon-96x96.png" sizes="96x96" />
 <link rel="icon" type="image/svg+xml" href="/assets/favicons/favicon.svg" />
 <link rel="shortcut icon" href="/assets/favicons/favicon.ico" />
@@ -9,68 +8,23 @@
 <meta name="apple-mobile-web-app-title" content="STiLE" />
 <link rel="manifest" href="/assets/favicons/site.webmanifest" />
 
-{% unless page.no_latex %}
-{% include latex.html %}
-{% endunless %}
+<!-- 明/暗模式：跟随系统设置。本站自带暗色样式，告诉 Dark Reader 等插件不要再改色 -->
+<meta name="color-scheme" content="light dark">
+<meta name="darkreader-lock">
+<link rel="stylesheet" href="{{ '/assets/css/main-dark.css' | relative_url }}" media="(prefers-color-scheme: dark)">
 
-<!-- 引入字体 -->
-
-<!-- 引入思源宋体（Noto Serif SC） -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;700&display=swap">
-
-<!-- 引入思源黑体（Noto Sans SC） -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;700&display=swap">
-
-<!-- 引入 霞鹜文楷（LXGW WenKai） -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lxgw/LxgwWenkai-Webfont@latest/style.css">
-
-<!-- 配置明/暗模式 -->
-<link rel="stylesheet" href="/assets/css/main.css" id="theme_source">
-<link rel="stylesheet alternate" href="/assets/css/theme-dark.css" id="theme_source_dark">
-<script>
-    let theme = sessionStorage.getItem('theme');
-    if (theme === "dark") {
-        sessionStorage.setItem('theme', 'dark');
-        node1 = document.getElementById('theme_source');
-        node2 = document.getElementById('theme_source_dark');
-        node1.setAttribute('rel', 'stylesheet alternate');
-        node2.setAttribute('rel', 'stylesheet');
-    }
-    else {
-        sessionStorage.setItem('theme', 'light');
-    }
-</script>
-
-<!-- 
-Ref:TeX Input Processor Options:
-https://docs.mathjax.org/en/latest/options/input/tex.html -->
+<!-- 数学公式：只在含公式的页面加载；脚本放在本站，不依赖境外 CDN
+     Ref: https://docs.mathjax.org/en/latest/options/input/tex.html -->
+{% if page.content contains '\(' or page.content contains '\[' %}
 <script>
     MathJax = {
         tex: {
-            packages: { '[+]': ['base', 'autoload'] },
-            // inlineMath: [ // 禁用 $...$，改用 \(...\) 作为行内公式
-            //     ['\\(', '\\)']
-            // ],
-            // displayMath: [ // 块级公式用 \[...\]
-            //     ['$$', '$$'],
-            //     ['\\[', '\\]']
-            // ],
             processEscapes: true,      // use \$ to produce a literal dollar sign
-            processEnvironments: true, // process \begin{xxx}...\end{xxx} outside math mode
-
+            processEnvironments: true  // process \begin{xxx}...\end{xxx} outside math mode
         },
-        processRefs: true,         // process \ref{...} outside of math mode
-        digits: /^(?:[0-9]+(?:\{,\}[0-9]{3})*(?:\.[0-9]*)?|\.[0-9]+)/,
-        // pattern for recognizing numbers
-        tags: 'ams',              // or 'ams' or 'all'
-        tagSide: 'right',          // side for \tag macros
-        tagIndent: '0.8em',        // amount to indent tags
-        useLabelIds: true,         // use label name rather than tag for ids
-        maxMacros: 10000,          // maximum number of macro substitutions per expression
-        maxBuffer: 5 * 1024,       // maximum size for the internal TeX string (5K)
+        svg: { fontCache: 'global' }
     };
 </script>
-
-<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
-</script>
+<script id="MathJax-script" async src="{{ '/assets/vendor/mathjax/tex-svg-full.js' | relative_url }}"></script>
+{% endif %}
 <!-- end custom head snippets -->

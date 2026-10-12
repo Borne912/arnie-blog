@@ -1,24 +1,10 @@
 ---
 title: 利用PolSARpro进行图像配准
-date: 2024-01-21 16.02:44
+date: 2024-01-21 16:02:44 +0800
 categories:
   - Research
 tags: 
-excerpt: 
-excerpt_separator: <!--more-->
-header:
-  teaser: 
-  show_overlay_excerpt: false
-  tagline: 
-  overlay_image: /assets/images/unsplash-image-post-cover.jpg
-  overlay_filter: 0.5
-  caption: "Photo credit: [**Unsplash**](https://unsplash.com)"
-  actions:
-    - label: 
-      url: https://unsplash.com
 ---
-# 利用PolSARpro进行图像配准
-<!-- 摘要内容（首页显示） -->
 ## 1. 引言
 
 通常对于不同卫星拍摄的相同区域所得到的极化 SAR 数据图像之间会存在差异（比如：图像分辨率），在某些特定的应用场合下（比如：融合应用），可能需要用到这些彼此存在差异的数据，这时就需要对这些彼此存在差异的数据进行图像配准。
@@ -30,7 +16,6 @@ header:
 > 比如：之前 《极化 SAR 数据处理 — 地理编码》 一文中介绍的地理编码就属于**几何校正**。
 
 <!--more-->
-<!-- 正文内容 -->
 
 ## 2. 利用 PolSARpro 进行图像配准
 
@@ -46,7 +31,7 @@ header:
 
 从下面两幅图中可以看出，ALOS-2 San Francisco 地区图像的空间分辨率[^2]（6.41152）明显高于 RADARSAT - 2 San Francisco 地区图像的空间分辨率（9.78673）。
 
-![San Francisco Geocode（RS2 & ALOS2）](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20240121160022763.png)
+![San Francisco Geocode（RS2 & ALOS2）](../assets/images/posts/2024-01-21/image-20240121160022763-ee333823.png)
 
 现在想要将 ALOS-2 San Francisco 地区图像和 RADARSAT - 2 San Francisco 地区图像进行配准，按照实际应用对于分辨率的需求，分为以下两种情况：
 
@@ -55,29 +40,29 @@ header:
 
 下面，以第二种情况为例（即：折中处理），进行展示，
 
-![Adjust resolution（RS2 & ALOS2）](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20240121155553539.png)
+![Adjust resolution（RS2 & ALOS2）](../assets/images/posts/2024-01-21/image-20240121155553539-7beae6db.png)
 
-![Resolution unification（RS2 & ALOS2）](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20240121155705805.png)
+![Resolution unification（RS2 & ALOS2）](../assets/images/posts/2024-01-21/image-20240121155705805-2776a63f.jpg)
 
 ### 2.3 裁剪研究区域
 
 从要配准的数据中任选一个，并从中裁剪出感兴趣的研究区域，下面，以 ALOS-2 数据为例，用 GIMP  先框选出要裁剪的区域，并记录下相应的位置（2652, 7736）和大小（1528, 1724），
 
-![Zone selection - GIMP](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20231228095346858.png)
+![Zone selection - GIMP](../assets/images/posts/2024-01-21/image-20231228095346858-7e3ba995.jpg)
 
 接着，利用 PolSARpro 中的 Convert 对图像进行裁剪，
 
-![Convert - PolSARpro](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20231228094850997.png)
+![Convert - PolSARpro](../assets/images/posts/2024-01-21/image-20231228094850997-d205768e.png)
 
 用 GIMP 寻找感兴趣的区域时，需要注意 GIMP 中的位置以及大小，与 PolSARpro - Convert 中的 Row 和 Col 恰好是相反的，即：在这个例子中，Init Row = 7736，End Row = 7736+1724，Init Col = 2652，End Col = 2652+1528
 
-![Crop Area - ALOS2](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/PauliRGB.bmp)
+![Crop Area - ALOS2](../assets/images/posts/2024-01-21/PauliRGB-72bc32e8.jpg)
 
 ### 2.4 寻找配准点进行配准
 
 配准的关键在于，如何确定不同数据图像间剪裁的位置，如下图所示，虽然不同数据图像之间剪裁区域的大小是确定的，但是位置却是不同的，因为对于不同数据图像来说整体的大小是不一样的，需要通过寻找数据图像之间的配准点来确定。
 
-![Zone selection - GIMP](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20231228095346858.png)
+![Zone selection - GIMP](../assets/images/posts/2024-01-21/image-20231228095346858-7e3ba995.jpg)
 
 基于上面的思想，给出的配准步骤大致如下：
 
@@ -85,13 +70,13 @@ header:
 2. 利用找出来的配准点，计算出 RADARSAT-2 （未剪裁数据）中的相应剪裁区域的位置
 3. 通过位置加上剪裁区域的大小，最终确定在 RADARSAT-2（未剪裁数据）上需要剪裁的区域
 
-![Registration procedure diagram](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20240121151431387.png)
+![Registration procedure diagram](../assets/images/posts/2024-01-21/image-20240121151431387-6668eb2f.png)
 
 ## 3. 小结
 
 最后，简单展示一下，两幅数据（RADARSAT-2 和 ALOS-2）的配准结果：
 
-![Registration result（RS2 & ALOS2）](https://raw.githubusercontents.com/Borne912/BlogDataBase/master/image-20240121155454239.png)
+![Registration result（RS2 & ALOS2）](../assets/images/posts/2024-01-21/image-20240121155454239-d10b0027.jpg)
 
 ## 参考
 
