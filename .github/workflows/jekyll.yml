@@ -41,8 +41,12 @@ jobs:
         env:
           JEKYLL_ENV: production
       - name: Build search index (Pagefind)
+        id: pagefind
         continue-on-error: true # 搜索索引出问题也不阻塞发布
         run: npx -y pagefind@1.5.2
+      - name: Warn if search index failed
+        if: steps.pagefind.outcome == 'failure'
+        run: echo "::warning::Pagefind 索引生成失败，本次发布的 /search/ 暂不可用"
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v5
 

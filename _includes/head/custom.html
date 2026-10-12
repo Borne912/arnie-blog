@@ -13,9 +13,9 @@
 <meta name="darkreader-lock">
 <link rel="stylesheet" href="{{ '/assets/css/main-dark.css' | relative_url }}" media="(prefers-color-scheme: dark)">
 
-<!-- 数学公式：只在含公式的页面加载；脚本放在本站，不依赖境外 CDN
+<!-- 数学公式：只在含公式的页面加载（content 是整页正文，列表页包含各篇摘要）；脚本放在本站，不依赖境外 CDN
      Ref: https://docs.mathjax.org/en/latest/options/input/tex.html -->
-{% if page.content contains '\(' or page.content contains '\[' %}
+{% if content contains '\(' or content contains '\[' %}
 <script>
     MathJax = {
         tex: {

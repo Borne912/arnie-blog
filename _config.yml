@@ -211,6 +211,7 @@ keep_files:
   - .svn
 encoding: "utf-8"
 markdown_ext: "markdown,mkdown,mkdn,mkd,md"
+strict_front_matter: true # front matter 写错时构建直接失败（会收到邮件），而不是丢掉整段把草稿发布出去
 
 
 # Conversion

@@ -4,8 +4,6 @@
     /* 居中对齐 */
     font-size: 14px;
     /* 适当调整字体大小 */
-    color: mix($text-color, $background-color, 75%);
-    /* 随亮色/暗色皮肤自动调整，保证对比度 */
     padding: 15px 0;
     /* 增加上下间距 */
 }
@@ -92,4 +90,19 @@ $brand-colors: (wechat: #50B674, zhihu: #0084FF, coffee: #FFD700);
     .fa-square-envelope { color: #2B6FD6; }
     .fa-telegram { color: #0088CC; }
     .fa-mug-hot { color: #FFD700; }
+}
+
+// 透明背景的配图（如导出的流程图、时间轴）垫白底，暗色模式下也看得清
+.page__content img {
+    background-color: #fff;
+}
+
+// Pagefind 搜索界面跟随站点亮色/暗色配色（它自带的样式只有亮色一套）
+#search {
+    --pagefind-ui-text: #{$text-color};
+    --pagefind-ui-primary: #{$primary-color};
+    --pagefind-ui-background: #{$background-color};
+    --pagefind-ui-border: #{$border-color};
+    --pagefind-ui-tag: #{$border-color};
+    --pagefind-ui-font: inherit;
 }
