@@ -109,8 +109,10 @@ analytics:
     tracking_id          : "G-9VN8L46JLC"
     anonymize_ip         : false # true, false (default)
 
-# 文章浏览量：不蒜子，仅在 production 的文章详情页启用；单篇可用 page_views: false 关闭
+# 文章浏览量：仅在 production 启用；单篇可用 page_views: false 关闭
 page_views               : true
+# 使用支持列表查询的接口版不蒜子，从接入时重新计数；清空可恢复原版服务。
+page_views_api           : https://busuanzi.9420.ltd/api
 
 
 # Site Author

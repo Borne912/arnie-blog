@@ -13,10 +13,16 @@
 <meta name="darkreader-lock">
 <link rel="stylesheet" href="{{ '/assets/css/main-dark.css' | relative_url }}" media="(prefers-color-scheme: dark)">
 
-{% if jekyll.environment == 'production' and site.page_views and page.collection == 'posts' and page.page_views != false %}
+{% if jekyll.environment == 'production' and site.page_views %}
+{% if site.page_views_api %}
+{% if content contains 'data-page-views-url' %}
+<script defer src="{{ '/assets/js/page-views.js' | relative_url }}" data-api="{{ site.page_views_api | escape }}"></script>
+{% endif %}
+{% elsif page.collection == 'posts' and page.page_views != false %}
 <!-- 不蒜子通过 Referer 区分文章；保留 HTTPS 请求中的完整路径，避免所有文章被合并计数 -->
 <meta name="referrer" content="no-referrer-when-downgrade">
 <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+{% endif %}
 {% endif %}
 
 <!-- 数学公式：只在含公式的页面加载（content 是整页正文，列表页包含各篇摘要）；脚本放在本站，不依赖境外 CDN

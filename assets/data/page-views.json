@@ -1,0 +1,13 @@
+---
+layout: null
+search: false
+---
+{
+  "enabled": {{ site.page_views | jsonify }},
+  "api": {{ site.page_views_api | jsonify }},
+  "site": {{ site.url | jsonify }},
+  "urls": [
+    {% assign counted_posts = site.posts | where_exp: "post", "post.page_views != false" %}
+    {% for post in counted_posts %}{{ post.url | absolute_url | jsonify }}{% unless forloop.last %},{% endunless %}{% endfor %}
+  ]
+}

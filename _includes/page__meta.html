@@ -2,8 +2,14 @@
 {% assign locale = include.locale | default: site.locale %}
 {% assign document = post | default: page %}
 {% assign show_page_views = false %}
-{% if jekyll.environment == 'production' and site.page_views and page.collection == 'posts' and page.page_views != false and document.url == page.url and include.type == nil %}
-  {% assign show_page_views = true %}
+{% assign increment_page_views = false %}
+{% if document.url == page.url and page.collection == 'posts' and include.type == nil %}
+  {% assign increment_page_views = true %}
+{% endif %}
+{% if jekyll.environment == 'production' and site.page_views and document.collection == 'posts' and document.page_views != false %}
+  {% if site.page_views_api or increment_page_views %}
+    {% assign show_page_views = true %}
+  {% endif %}
 {% endif %}
 {% if document.read_time or document.show_date or show_page_views %}
   <p class="page__meta">
@@ -35,10 +41,15 @@
     {% endif %}
 
     {% if show_page_views %}
-      <span id="busuanzi_container_page_pv" class="page__meta-views" style="display: none;" aria-live="polite">
+      <span class="page__meta-views" style="display: none;" aria-live="polite"
+        {% if site.page_views_api %}
+          data-page-views-url="{{ document.url | absolute_url | escape }}"{% if increment_page_views %} data-page-views-increment{% endif %}
+        {% else %}
+          id="busuanzi_container_page_pv"
+        {% endif %}>
         {% if document.read_time or document.show_date %}<span class="page__meta-sep"></span>{% endif %}
         <i class="fas fa-eye" aria-hidden="true"></i>
-        <span id="busuanzi_value_page_pv"></span> 次浏览
+        <span {% if site.page_views_api %}data-page-views-value{% else %}id="busuanzi_value_page_pv"{% endif %}></span> 次浏览
       </span>
     {% endif %}
   </p>

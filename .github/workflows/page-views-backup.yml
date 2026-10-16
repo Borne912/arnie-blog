@@ -1,0 +1,56 @@
+name: Back up article page views
+
+on:
+  schedule:
+    - cron: "17 20 * * *" # 北京时间每天 04:17
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Deploy Jekyll site to Pages"]
+    types: [completed]
+    branches: [main]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: page-views-backup
+  cancel-in-progress: false
+
+jobs:
+  backup:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: main
+      - name: Prepare backup branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          backup_dir="$RUNNER_TEMP/page-views-backup"
+          if git ls-remote --exit-code --heads origin page-views-backups; then
+            git fetch --no-tags origin page-views-backups
+            git worktree add --detach "$backup_dir" FETCH_HEAD
+          else
+            result=$?
+            if [ "$result" -ne 2 ]; then exit "$result"; fi
+            git worktree add --detach "$backup_dir" HEAD
+            git -C "$backup_dir" switch --orphan page-views-backups
+          fi
+      - name: Read article counters
+        run: >-
+          python3 _scripts/backup_page_views.py
+          --manifest https://stile.cc/assets/data/page-views.json
+          --output "$RUNNER_TEMP/page-views-backup/page-views.json"
+      - name: Save backup to GitHub
+        shell: bash
+        run: |
+          set -euo pipefail
+          backup_dir="$RUNNER_TEMP/page-views-backup"
+          if [ ! -f "$backup_dir/page-views.json" ]; then exit 0; fi
+          git -C "$backup_dir" add page-views.json
+          if git -C "$backup_dir" diff --cached --quiet; then exit 0; fi
+          git -C "$backup_dir" -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Back up article page views"
+          git -C "$backup_dir" push origin HEAD:page-views-backups
