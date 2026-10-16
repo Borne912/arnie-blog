@@ -109,6 +109,9 @@ analytics:
     tracking_id          : "G-9VN8L46JLC"
     anonymize_ip         : false # true, false (default)
 
+# 文章浏览量：不蒜子，仅在 production 的文章详情页启用；单篇可用 page_views: false 关闭
+page_views               : true
+
 
 # Site Author
 author:

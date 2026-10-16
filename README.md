@@ -50,6 +50,7 @@
 - **Ruby 版本**：`.ruby-version` 写的是 `3.4`，CI 会自动使用最新的 3.4.x；大约 2028 年 3.4 停止维护前再升级一次。
 - **站内搜索**：由 Pagefind 在 CI 里生成（`pagefind.yml`），搜索出问题不会阻塞发布。
 - **暗色模式**：跟随系统设置（`assets/css/main-dark.scss`）；样式调整写在 `_sass/custom.scss`，字体等主题变量写在 `_sass/_vars.scss`，不要复制主题文件。
+- **文章浏览量**：使用[不蒜子](https://busuanzi.ibruce.info/)，正式环境的文章详情页会在日期、阅读时长旁显示「N 次浏览」。按文章网址累计浏览次数（PV，重复访问、刷新也会计数），接入前的历史访问无法补算；数据由不蒜子保存，重新构建网站不会清零。首页、归档、搜索、关于页及本地预览不加载统计，服务不可用时隐藏浏览量。将 `_config.yml` 中的 `page_views` 改为 `false` 可全站关闭，单篇文章在 front matter 中设置 `page_views: false` 可单独关闭。展示模板在 `_includes/page__meta.html`，升级主题时需留意上游元信息模板的变化。
 
 ## 本地预览（可选）
 
@@ -60,4 +61,4 @@ bundle install
 bundle exec jekyll serve
 ```
 
-然后打开 <http://localhost:4000>。本地预览没有搜索索引，也不显示评论。
+然后打开 <http://localhost:4000>。本地预览没有搜索索引，也不显示评论和浏览量。
