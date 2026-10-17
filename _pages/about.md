@@ -2,6 +2,8 @@
 permalink: /about/
 layout: single
 title: "About"
+seo_title: "关于作者：极化 SAR 遥感研究与技术实践"
+description: "了解 STiLE 博客作者拾籍而上：一名关注极化 SAR 遥感图像解译的计算机博士生。本站记录科研学习、编程工具、技术实践与个人成长，也提供 RSS、微信公众号等订阅方式，方便持续关注新文章。"
 classes: wide
 ---
 

@@ -22,7 +22,7 @@ title                    : "STiLE"
 title_separator          : "-"
 subtitle                 : Doing something SIGNIFICANT. # site tagline that appears below site title in masthead
 name                     : "拾籍而上"
-description              : "This is a blog about my life, my thoughts, and my work."
+description              : "STiLE 是拾籍而上的个人博客，记录极化 SAR 遥感研究、编程与算法、Linux 服务器配置、Python 工具和 LaTeX 写作实践，也分享阅读、生活与个人成长的思考。"
 url                      : https://stile.cc # the base hostname & protocol for your site e.g. "https://mmistakes.github.io"
 baseurl                  :  # the subpath of your site, e.g. "/blog"
 repository               : "Borne912/arnie-blog" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"

@@ -49,6 +49,9 @@
 - **依赖升级**：Dependabot 每月自动开升级 PR，PR 上的构建通过后直接合并即可。
 - **Ruby 版本**：`.ruby-version` 写的是 `3.4`，CI 会自动使用最新的 3.4.x；大约 2028 年 3.4 停止维护前再升级一次。
 - **站内搜索**：由 Pagefind 在 CI 里生成（`pagefind.yml`），搜索出问题不会阻塞发布。
+- **搜索标题与摘要**：`_includes/seo.html` 基于 Minimal Mistakes 4.28.1，使用 `seo_title` 自定义浏览器及搜索结果中的标题，`description` 自定义摘要；缺省摘要从正文提取并限制为 150 个字符。首页分页、标签和分类页分别生成摘要，避免重复使用站点简介。正文标题和链接仍由原有 `title` 和 permalink 决定。升级主题时对照上游 SEO 模板检查其余标签的变化。发布流程用 `_scripts/check_seo.py` 检查所有站点地图页面的规范链接、标题和摘要唯一性，以及本项目的长度目标（标题 15–80、摘要 60–150 字符）；这些是维护标准，不代表搜索引擎的排名规则。短标题可另填更具体的 `seo_title`，代码示例较多的文章可手写 `description`。
+- **站点地图与 Bing**：[站点地图](https://stile.cc/sitemap.xml)由 `jekyll-sitemap` 生成，[robots.txt](https://stile.cc/robots.txt)自动声明其地址。若 Bing 后台还未登记，可在 Sitemaps 中提交 `https://stile.cc/sitemap.xml`；现有 Windsor.ai 的 Bing 连接仅提供报表读取，不能操作后台登记。站点修复后，后台建议需等待重新抓取或扫描才会更新。
+- **IndexNow 自动通知**：`indexnow-key.txt` 是随网站发布的所有权验证文件。`.github/workflows/indexnow.yml` 在主分支的网站部署成功后，先读取线上站点地图并核对线上验证文件，再将当前规范网址批量通知 Bing 的 IndexNow 接口；可在 Actions 手动运行 `Notify Bing with IndexNow`。提交失败会使该独立任务报错，网站部署不受影响。日志的 HTTP 200 表示已接收，202 表示已接收且所有权验证待处理，均不保证收录或排名。更换域名时同时更新通知工作流中的地址。
 - **暗色模式**：跟随系统设置（`assets/css/main-dark.scss`）；样式调整写在 `_sass/custom.scss`，字体等主题变量写在 `_sass/_vars.scss`，不要复制主题文件。
 - **上线日期与运行时长**：`_config.yml` 的 `site_launched_at` 按首篇已发布文章《使用MySQL的常规操作》的发布时间设为 `2021-11-21T16:46:00+08:00`。页脚显示北京时间的上线日期、时刻及累计「天、时、分、秒」，每秒自动更新。该值独立于构建和部署时间，重新发布不会重置；修改时保留时区，留空则隐藏。不依赖访问量服务，本地预览也可以查看。运行时长表示距上线时间的累计时长，不是可用性监测结果。
 - **浏览量**：使用支持按文章查询的 [soxft/busuanzi](https://github.com/soxft/busuanzi) 接口，文章详情、首页、分类、标签、年份归档和相关文章都会在日期、阅读时长旁显示「N 次浏览」，全站页脚显示「网站总访问量：N 次」。显示值为固定历史基数加接口的实时计数。总访问量累计 PV（重复访问、刷新也计数，不是独立访客数）；每次打开页面只增加一次，文章页的文章计数和全站计数共用一次请求，列表里的文章只读查询。非文章页面的实时计数从全站计数功能上线起开始计入。开发环境不统计，服务异常时隐藏浏览量。`_config.yml` 的 `page_views: false` 全站关闭；页面 front matter 中的同名选项使该页面只查询、不新增计数。展示模板在 `_includes/page__meta.html` 和 `_includes/footer/custom.html`，升级主题时留意上游元信息模板的变化。

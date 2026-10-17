@@ -36,12 +36,14 @@ jobs:
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v6
-      - name: Test page-view backups
+      - name: Test statistics backups and IndexNow notifications
         run: python3 -m unittest discover -s test -p 'test_*.py'
       - name: Build with Jekyll
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:
           JEKYLL_ENV: production
+      - name: Validate search metadata and sitemap
+        run: python3 _scripts/check_seo.py --site-dir _site --site https://stile.cc
       - name: Build search index (Pagefind)
         id: pagefind
         continue-on-error: true # 搜索索引出问题也不阻塞发布
