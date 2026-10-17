@@ -112,6 +112,45 @@ class BackupTests(unittest.TestCase):
         self.run_backup(self.reply(0))
         self.assertEqual(json.loads(self.output.read_text())["counts"], dict.fromkeys(self.manifest["urls"], 0))
 
+    def test_history_is_backed_up_without_adding_it_to_live_counters(self):
+        history = {
+            "site": self.manifest["site"],
+            "source": "Google Analytics 4",
+            "site_pv": 40,
+            "counts": dict(zip(self.manifest["urls"], (7, 11))),
+        }
+        self.manifest["history"] = history
+        for _ in range(2):
+            self.run_backup(self.reply(15))
+            data = json.loads(self.output.read_text())
+            self.assertEqual(data["version"], 3)
+            self.assertEqual(data["history"], history)
+            self.assertEqual(data["site_pv"], 100)
+            self.assertEqual(data["counts"], dict.fromkeys(self.manifest["urls"], 15))
+
+    def test_missing_history_cannot_erase_recovered_data(self):
+        self.previous["history"] = {"site_pv": 40}
+        self.output.write_text(json.dumps(self.previous))
+        previous = self.output.read_bytes()
+        with self.assertRaisesRegex(ValueError, "Historical counts missing"):
+            self.run_backup(lambda *args: self.fail("Unexpected network request"))
+        self.assertEqual(self.output.read_bytes(), previous)
+
+    def test_invalid_history_is_rejected_without_replacing_backup(self):
+        previous = self.output.read_bytes()
+        valid = {"site": self.manifest["site"], "site_pv": 40, "counts": {self.manifest["urls"][0]: 7}}
+        for change in (
+            {"site": "https://other.example.test"},
+            {"site_pv": True},
+            {"site_pv": 6},
+            {"counts": {self.manifest["urls"][0]: -1}},
+            {"counts": {"https://other.example.test/": 7}},
+        ):
+            with self.subTest(change=change), self.assertRaises(ValueError):
+                self.manifest["history"] = {**valid, **change}
+                self.run_backup(lambda *args: self.fail("Unexpected network request"))
+            self.assertEqual(self.output.read_bytes(), previous)
+
 
 if __name__ == "__main__":
     unittest.main()

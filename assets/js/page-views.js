@@ -20,6 +20,7 @@
     article.targets.push({
       element,
       metric: isSite ? 'site_pv' : 'page_pv',
+      baseline: Number((isSite ? element.dataset.siteViewsBaseline : element.dataset.pageViewsBaseline) ?? 0),
       selector: isSite ? '[data-site-views-value]' : '[data-page-views-value]'
     });
     article.increment ||= element.hasAttribute(isSite ? 'data-site-views-increment' : 'data-page-views-increment');
@@ -40,10 +41,13 @@
       const result = await response.json();
       if (result.success !== true) return;
 
-      article.targets.forEach(({ element, metric, selector }) => {
+      article.targets.forEach(({ element, metric, baseline, selector }) => {
         const count = result.data?.[metric];
         if (!Number.isSafeInteger(count) || count < 0) return;
-        element.querySelector(selector).textContent = count.toLocaleString('zh-CN');
+        if (!Number.isSafeInteger(baseline) || baseline < 0) return;
+        const total = baseline + count;
+        if (!Number.isSafeInteger(total)) return;
+        element.querySelector(selector).textContent = total.toLocaleString('zh-CN');
         element.style.removeProperty('display');
       });
     } catch {

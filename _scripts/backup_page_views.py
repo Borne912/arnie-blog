@@ -24,7 +24,23 @@ def snapshot(manifest, previous=None, reader=read_json):
     urls = sorted(set(manifest["urls"]))
     if not urls:
         raise ValueError("No published articles found; refusing to replace the backup")
-    for url in urls:
+    history = manifest.get("history")
+    if history is None and previous and previous.get("site") == manifest["site"] and previous.get("history"):
+        raise ValueError("Historical counts missing; preserving the previous backup")
+    if history is not None:
+        if not isinstance(history, dict) or history.get("site") != manifest["site"]:
+            raise ValueError("Invalid historical statistics site")
+        historical_total = history.get("site_pv")
+        historical_counts = history.get("counts")
+        if type(historical_total) is not int or historical_total < 0 or not isinstance(historical_counts, dict):
+            raise ValueError("Invalid historical counts")
+        if any(type(value) is not int or value < 0 for value in historical_counts.values()):
+            raise ValueError("Invalid historical article count")
+        if sum(historical_counts.values()) > historical_total:
+            raise ValueError("Historical article counts exceed the site total")
+    else:
+        historical_counts = {}
+    for url in set(urls) | set(historical_counts):
         parts = urlsplit(url)
         if parts.scheme != "https" or parts.netloc != site.netloc or parts.query or parts.fragment:
             raise ValueError(f"Invalid article URL: {url}")
@@ -50,14 +66,18 @@ def snapshot(manifest, previous=None, reader=read_json):
         if site_pv < previous.get("site_pv", 0):
             raise ValueError("Site counter decreased; preserving the previous backup")
 
-    return {
-        "version": 2,
+    data = {
+        "version": 3 if history is not None else 2,
         "saved_at": datetime.now(timezone.utc).isoformat(),
         "api": api,
         "site": manifest["site"],
         "site_pv": site_pv,
         "counts": counts,
     }
+    if history is not None:
+        # 保留原始实时计数与固定历史基数，恢复或重复备份时不会再次累加历史。
+        data["history"] = history
+    return data
 
 
 def main():

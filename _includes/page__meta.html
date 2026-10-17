@@ -43,7 +43,8 @@
     {% if show_page_views %}
       <span class="page__meta-views" style="display: none;" aria-live="polite"
         {% if site.page_views_api %}
-          data-page-views-url="{{ document.url | absolute_url | escape }}"{% if increment_page_views %} data-page-views-increment{% endif %}
+          {% assign page_views_url = document.url | absolute_url %}
+          data-page-views-url="{{ page_views_url | escape }}" data-page-views-baseline="{{ site.data.page_views_history.counts[page_views_url] | default: 0 }}"{% if increment_page_views %} data-page-views-increment{% endif %}
         {% else %}
           id="busuanzi_container_page_pv"
         {% endif %}>
