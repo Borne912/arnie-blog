@@ -13,10 +13,20 @@
     /* 文字和图标之间的间距 */
 }
 
-.site-views {
+.site-views,
+.site-runtime {
     margin-bottom: 1em;
     text-align: center;
     font-size: 14px;
+}
+
+.site-runtime p {
+    margin: 0.3em 0;
+}
+
+.site-runtime [role="timer"] {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
 }
 
 .license-container a {

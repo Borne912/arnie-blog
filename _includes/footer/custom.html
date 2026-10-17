@@ -19,4 +19,11 @@
 </div>
 {% endif %}
 
+{% if site.site_launched_at %}
+<div class="site-runtime" data-site-runtime data-launched-at="{{ site.site_launched_at | date_to_xmlschema }}">
+    <p>网站上线时间：<time datetime="{{ site.site_launched_at | date_to_xmlschema }}">{{ site.site_launched_at | date: '%Y-%m-%d %H:%M' }}</time>（北京时间）</p>
+    <p data-site-runtime-row hidden>已运行：<span data-site-runtime-value role="timer" aria-live="off"></span></p>
+</div>
+{% endif %}
+
 <!-- end custom footer snippets -->

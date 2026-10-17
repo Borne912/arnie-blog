@@ -23,6 +23,10 @@
 {% endif %}
 {% endif %}
 
+{% if site.site_launched_at %}
+<script defer src="{{ '/assets/js/site-runtime.js' | relative_url }}"></script>
+{% endif %}
+
 <!-- 数学公式：只在含公式的页面加载（content 是整页正文，列表页包含各篇摘要）；脚本放在本站，不依赖境外 CDN
      Ref: https://docs.mathjax.org/en/latest/options/input/tex.html -->
 {% if content contains '\(' or content contains '\[' %}

@@ -114,6 +114,9 @@ page_views               : true
 # 使用支持列表查询的接口版不蒜子，从接入时重新计数；清空可恢复原版服务。
 page_views_api           : https://busuanzi.9420.ltd/api
 
+# 按首篇已发布文章《使用MySQL的常规操作》的发布时间起算；固定保存，部署不会重置。
+site_launched_at         : "2021-11-21T16:46:00+08:00"
+
 
 # Site Author
 author:
