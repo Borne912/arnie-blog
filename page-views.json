@@ -1,8 +1,9 @@
 {
-  "version": 1,
-  "saved_at": "2026-10-16T22:49:47.574752+00:00",
+  "version": 2,
+  "saved_at": "2026-10-17T00:24:37.577282+00:00",
   "api": "https://busuanzi.9420.ltd/api",
   "site": "https://stile.cc",
+  "site_pv": 7,
   "counts": {
     "https://stile.cc/%E4%BD%BF%E7%94%A8MySQL%E7%9A%84%E5%B8%B8%E8%A7%84%E6%93%8D%E4%BD%9C/": 0,
     "https://stile.cc/%E5%A6%82%E4%BD%95%E7%90%86%E8%A7%A3%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1/": 0,
@@ -26,7 +27,7 @@
     "https://stile.cc/research/PolSAR-%E9%81%A5%E6%84%9F%E5%BA%94%E7%94%A8%E9%A2%86%E5%9F%9F%E5%B8%B8%E8%A7%81%E7%9A%84%E6%9C%9F%E5%88%8A%E5%92%8C%E4%BC%9A%E8%AE%AE/": 0,
     "https://stile.cc/sports/2minLPL%E8%B5%9B%E5%88%B6%E9%80%9F%E8%A7%88/": 0,
     "https://stile.cc/sports/5minLOL%E5%85%A8%E7%90%83%E6%80%BB%E5%86%B3%E8%B5%9B%E8%B5%9B%E5%88%B6%E9%80%9F%E8%A7%88/": 0,
-    "https://stile.cc/tools/%E4%BA%BA%E7%B1%BB%E6%97%A9%E6%9C%9F%E9%A9%AF%E6%9C%8D-Word-%E5%AE%9E%E5%BD%95/": 0,
+    "https://stile.cc/tools/%E4%BA%BA%E7%B1%BB%E6%97%A9%E6%9C%9F%E9%A9%AF%E6%9C%8D-Word-%E5%AE%9E%E5%BD%95/": 1,
     "https://stile.cc/tools/%E4%BD%BF%E7%94%A8-frp-%E5%B7%A5%E5%85%B7%E5%AE%9E%E7%8E%B0%E5%86%85%E7%BD%91%E7%A9%BF%E9%80%8F/": 0,
     "https://stile.cc/tools/%E5%88%A9%E7%94%A8Conda%E7%AE%A1%E7%90%86Python/": 0,
     "https://stile.cc/tools/%E5%9C%A8VSCode%E4%B8%AD%E4%BD%BF%E7%94%A8Python/": 2,
