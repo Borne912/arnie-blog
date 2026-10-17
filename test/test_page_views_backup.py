@@ -40,18 +40,19 @@ class BackupTests(unittest.TestCase):
         with patch.object(sys, "argv", argv), patch.object(backup, "urlopen", side_effect=response):
             backup.main()
 
-    def reply(self, value):
+    def reply(self, value, site_value=100):
         def respond(request, timeout):
             self.assertEqual(request.get_method(), "GET")
             self.assertEqual(request.full_url, self.manifest["api"])
             self.assertIn(request.get_header("X-bsz-referer"), self.manifest["urls"])
-            return io.BytesIO(json.dumps({"success": True, "data": {"page_pv": value}}).encode())
+            return io.BytesIO(json.dumps({"success": True, "data": {"page_pv": value, "site_pv": site_value}}).encode())
         return respond
 
     def test_success_reads_without_incrementing_and_saves_all_articles(self):
         self.run_backup(self.reply(15))
         data = json.loads(self.output.read_text())
         self.assertEqual(data["counts"], dict.fromkeys(self.manifest["urls"], 15))
+        self.assertEqual(data["site_pv"], 100)
         self.assertIn("saved_at", data)
 
     def test_network_failure_preserves_last_good_file(self):
@@ -78,6 +79,21 @@ class BackupTests(unittest.TestCase):
         previous = self.output.read_bytes()
         with self.assertRaises(ValueError):
             self.run_backup(self.reply(15))
+        self.assertEqual(self.output.read_bytes(), previous)
+
+    def test_invalid_site_count_preserves_last_good_file(self):
+        previous = self.output.read_bytes()
+        for value in (None, "100", -1, True):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                self.run_backup(self.reply(15, site_value=value))
+            self.assertEqual(self.output.read_bytes(), previous)
+
+    def test_site_counter_reset_preserves_last_good_file(self):
+        self.previous["site_pv"] = 100
+        self.output.write_text(json.dumps(self.previous))
+        previous = self.output.read_bytes()
+        with self.assertRaisesRegex(ValueError, "Site counter decreased"):
+            self.run_backup(self.reply(15, site_value=0))
         self.assertEqual(self.output.read_bytes(), previous)
 
     def test_foreign_urls_are_rejected_before_requesting(self):

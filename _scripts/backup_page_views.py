@@ -34,20 +34,28 @@ def snapshot(manifest, previous=None, reader=read_json):
         value = result.get("data", {}).get("page_pv")
         if result.get("success") is not True or type(value) is not int or value < 0:
             raise ValueError(f"Invalid count for {url}")
-        return url, value
+        site_value = result.get("data", {}).get("site_pv")
+        if type(site_value) is not int or site_value < 0:
+            raise ValueError(f"Invalid site count for {url}")
+        return url, value, site_value
 
     with ThreadPoolExecutor(max_workers=3) as pool:
-        counts = dict(pool.map(count, urls))
+        values = list(pool.map(count, urls))
+    counts = {url: value for url, value, _ in values}
+    site_pv = max(total for _, _, total in values)
     if previous and previous.get("api") == api and previous.get("site") == manifest["site"]:
         for url, value in counts.items():
             if value < previous["counts"].get(url, 0):
                 raise ValueError(f"Counter decreased for {url}; preserving the previous backup")
+        if site_pv < previous.get("site_pv", 0):
+            raise ValueError("Site counter decreased; preserving the previous backup")
 
     return {
-        "version": 1,
+        "version": 2,
         "saved_at": datetime.now(timezone.utc).isoformat(),
         "api": api,
         "site": manifest["site"],
+        "site_pv": site_pv,
         "counts": counts,
     }
 
