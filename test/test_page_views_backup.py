@@ -1,18 +1,85 @@
 import importlib.util
+from http.client import IncompleteRead
 import io
 import json
 from pathlib import Path
 import sys
 import tempfile
 import unittest
-from unittest.mock import patch
-from urllib.error import URLError
+from unittest.mock import call, patch
+from urllib.error import HTTPError, URLError
 
 spec = importlib.util.spec_from_file_location(
     "backup_page_views", Path(__file__).parents[1] / "_scripts/backup_page_views.py"
 )
 backup = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(backup)
+
+
+class ReadJsonTests(unittest.TestCase):
+    def setUp(self):
+        self.url = "https://stats.example.test/api"
+        self.headers = {"x-bsz-referer": "https://stile.cc/first/", "Cache-Control": "no-cache"}
+        self.sleep = self.enterContext(patch("time.sleep"))
+        self.stderr = self.enterContext(patch("sys.stderr", new_callable=io.StringIO))
+
+    def response(self):
+        return io.BytesIO(b'{"success": true, "data": {"page_pv": 15, "site_pv": 100}}')
+
+    def test_transient_network_errors_recover_without_incrementing(self):
+        for error in (TimeoutError("read timed out"), URLError("unavailable"), ConnectionResetError("reset"), IncompleteRead(b"{")):
+            with self.subTest(error=error), patch.object(backup, "urlopen", side_effect=[error, self.response()]) as opening:
+                self.sleep.reset_mock()
+                data = backup.read_json(self.url, self.headers)
+                self.assertEqual(data["data"]["page_pv"], 15)
+                self.assertEqual(opening.call_count, 2)
+                self.sleep.assert_called_once_with(2)
+                for request_call in opening.call_args_list:
+                    request = request_call.args[0]
+                    self.assertEqual(request.full_url, self.url)
+                    self.assertEqual(request.get_method(), "GET")
+                    self.assertEqual(request.get_header("X-bsz-referer"), self.headers["x-bsz-referer"])
+        self.assertIn(self.headers["x-bsz-referer"], self.stderr.getvalue())
+
+    def test_timeout_while_reading_response_is_retried(self):
+        response = self.response()
+        with patch.object(response, "read", side_effect=TimeoutError("body timed out")), patch.object(
+            backup, "urlopen", side_effect=[response, self.response()]
+        ) as opening:
+            self.assertTrue(backup.read_json(self.url)["success"])
+        self.assertEqual(opening.call_count, 2)
+
+    def test_temporary_http_errors_are_retried(self):
+        for status in (408, 429, 500, 502, 503, 504):
+            error = HTTPError(self.url, status, "temporary failure", {}, None)
+            with self.subTest(status=status), patch.object(backup, "urlopen", side_effect=[error, self.response()]) as opening:
+                self.assertTrue(backup.read_json(self.url)["success"])
+                self.assertEqual(opening.call_count, 2)
+
+    def test_permanent_http_errors_fail_without_retrying(self):
+        for status in (400, 401, 403, 404):
+            error = HTTPError(self.url, status, "permanent failure", {}, None)
+            with self.subTest(status=status), patch.object(backup, "urlopen", side_effect=error) as opening:
+                with self.assertRaises(HTTPError):
+                    backup.read_json(self.url)
+                self.assertEqual(opening.call_count, 1)
+        self.sleep.assert_not_called()
+
+    def test_persistent_timeout_stops_after_three_attempts(self):
+        error = TimeoutError("still unavailable")
+        with patch.object(backup, "urlopen", side_effect=error) as opening:
+            with self.assertRaises(TimeoutError) as raised:
+                backup.read_json(self.url)
+        self.assertIs(raised.exception, error)
+        self.assertEqual(opening.call_count, 3)
+        self.assertEqual(self.sleep.call_args_list, [call(2), call(4)])
+
+    def test_invalid_json_fails_without_retrying(self):
+        with patch.object(backup, "urlopen", return_value=io.BytesIO(b"not json")) as opening:
+            with self.assertRaises(json.JSONDecodeError):
+                backup.read_json(self.url)
+        self.assertEqual(opening.call_count, 1)
+        self.sleep.assert_not_called()
 
 
 class BackupTests(unittest.TestCase):
@@ -37,7 +104,7 @@ class BackupTests(unittest.TestCase):
     def run_backup(self, response):
         self.manifest_file.write_text(json.dumps(self.manifest))
         argv = ["backup", "--manifest", str(self.manifest_file), "--output", str(self.output)]
-        with patch.object(sys, "argv", argv), patch.object(backup, "urlopen", side_effect=response):
+        with patch.object(sys, "argv", argv), patch.object(backup, "urlopen", side_effect=response), patch("time.sleep"):
             backup.main()
 
     def reply(self, value, site_value=100):
@@ -60,6 +127,15 @@ class BackupTests(unittest.TestCase):
         with self.assertRaises(URLError):
             self.run_backup(URLError("unavailable"))
         self.assertEqual(self.output.read_bytes(), previous)
+
+    def test_exhausted_retries_preserve_last_good_file(self):
+        self.manifest["urls"] = self.manifest["urls"][:1]
+        previous = self.output.read_bytes()
+        for error in (TimeoutError("unavailable"), HTTPError(self.manifest["api"], 503, "unavailable", {}, None)):
+            with self.subTest(error=error), self.assertRaises(type(error)):
+                self.run_backup(error)
+            self.assertEqual(self.output.read_bytes(), previous)
+            self.assertFalse(self.output.with_suffix(".tmp").exists())
 
     def test_invalid_counts_preserve_last_good_file(self):
         previous = self.output.read_bytes()

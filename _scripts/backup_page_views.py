@@ -3,17 +3,37 @@
 import argparse
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
+from http.client import IncompleteRead
 import json
 import os
 from pathlib import Path
+import sys
+import time
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlsplit
 from urllib.request import Request, urlopen
 
 
 def read_json(url, headers=None):
     request = Request(url, headers=headers or {}, method="GET")
-    with urlopen(request, timeout=20) as response:
-        return json.load(response)
+    for attempt in range(3):
+        try:
+            with urlopen(request, timeout=20) as response:
+                return json.load(response)
+        except HTTPError as error:
+            if error.code not in (408, 429, 500, 502, 503, 504) or attempt == 2:
+                raise
+            reason = str(error)
+            error.close()
+        except (URLError, TimeoutError, ConnectionError, IncompleteRead) as error:
+            if attempt == 2:
+                raise
+            reason = str(error)
+        # 所有请求均为只读 GET；仅重试临时网络错误，不重试无效数据。
+        delay = 2 ** (attempt + 1)
+        target = request.get_header("X-bsz-referer") or url
+        print(f"Read failed for {target}: {reason}; retry {attempt + 1}/2 in {delay}s", file=sys.stderr)
+        time.sleep(delay)
 
 
 def snapshot(manifest, previous=None, reader=read_json):
