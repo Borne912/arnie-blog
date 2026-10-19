@@ -13,9 +13,10 @@
 </div>
 
 {% if jekyll.environment == 'production' and site.page_views and site.page_views_api %}
-<div class="site-views" data-site-views-url="{{ page.url | absolute_url | escape }}" data-site-views-baseline="{{ site.data.page_views_history.site_pv | default: 0 }}"{% if page.page_views != false %} data-site-views-increment{% endif %} style="display: none;" aria-live="polite">
+{% assign site_views_baseline = site.data.page_views_history.site_pv | default: 0 %}
+<div class="site-views" data-site-views-url="{{ page.url | absolute_url | escape }}" data-site-views-baseline="{{ site_views_baseline }}"{% if page.page_views != false %} data-site-views-increment{% endif %} title="已保存的历史记录，等待实时更新" aria-live="polite">
     <i class="fas fa-eye" aria-hidden="true"></i>
-    网站总访问量：<span data-site-views-value></span> 次
+    网站总访问量：<span data-site-views-value>{% if site_views_baseline > 0 %}≥{{ site_views_baseline }}{% else %}统计中{% endif %}</span><span data-views-unit{% if site_views_baseline == 0 %} hidden{% endif %}> 次</span>
 </div>
 {% endif %}
 

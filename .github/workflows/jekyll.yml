@@ -38,6 +38,23 @@ jobs:
         uses: actions/configure-pages@v6
       - name: Test statistics backups and IndexNow notifications
         run: python3 -m unittest discover -s test -p 'test_*.py'
+      - name: Test browser counter recovery
+        run: node test/page-views.test.cjs
+      - name: Load latest saved counters
+        continue-on-error: true # 分支读取失败时保留仓库随附的最后有效快照
+        timeout-minutes: 1
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin page-views-backups
+          git show FETCH_HEAD:page-views.json > "$RUNNER_TEMP/page-views-snapshot.json"
+          python3 - "$RUNNER_TEMP/page-views-snapshot.json" <<'PY'
+          import json
+          from pathlib import Path
+          import sys
+          source = json.loads(Path(sys.argv[1]).read_text())
+          snapshot = {key: source[key] for key in ('version', 'saved_at', 'api', 'site', 'site_pv', 'counts')}
+          Path('_data/page_views_snapshot.json').write_text(json.dumps(snapshot, ensure_ascii=False, indent=2) + '\n')
+          PY
       - name: Build with Jekyll
         run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
         env:

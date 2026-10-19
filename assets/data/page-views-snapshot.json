@@ -1,0 +1,6 @@
+---
+layout: null
+search: false
+sitemap: false
+---
+{{ site.data.page_views_snapshot | jsonify }}
