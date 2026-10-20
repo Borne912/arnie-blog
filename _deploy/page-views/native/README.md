@@ -84,6 +84,18 @@ Redis AOF 每秒同步磁盘，正常服务重启保留计数；突然断电可�
 
 保持 Cloudflare 为仅 DNS，先完成源站 HTTPS 检查。通过后再开启代理，使用 Full (strict)，让 `/api` 绕过缓存，避免登录页或交互式挑战阻断访客统计。无需为部署启用 Tailscale，也无需执行旧的 Tailnet 接入脚本。
 
+### Cloudflare 浏览器完整性检查例外
+
+浏览器完整性检查（Browser Integrity Check，BIC）可能将 GitHub Actions 的 `Python-urllib/3.12` 只读备份请求拦截为 HTTP 403。缓存规则中的“绕过缓存”只影响缓存，不能解除该项安全检查。若安全事件确认匹配服务为“浏览器完整性检查”，在 `stile.cc` 的“规则 → 概述 → 创建规则 → 配置规则”中新建规则：
+
+- 名称：`统计 API 关闭浏览器完整性检查`。
+- 自定义筛选表达式：`(http.host eq "stats.stile.cc" and http.request.uri.path eq "/api")`。
+- 添加设置：`浏览器完整性检查（Browser Integrity Check）`，设为关闭，然后部署。
+
+该配置仅影响统计接口的 BIC；保留橙云、Full (strict)、已有的不缓存规则及其他安全规则。不要按 GitHub 临时出口 IP 或整个 Microsoft ASN 放行，也无需修改 Nginx、Redis 或重新安装服务。设置后重跑 `Back up article page views`，核对所有文章完整备份成功及备份分支的数据；本机 curl 成功不能代替 GitHub 运行结果。
+
+备份失败时，日志只记录定位所需的公开响应头，例如 `CF-Ray`，不记录 Cookie、令牌或响应正文。可凭 Ray ID 在 Cloudflare 安全事件中核对实际拦截来源。[BIC 官方说明](https://developers.cloudflare.com/waf/tools/browser-integrity-check/)支持按主机与路径选择性关闭。
+
 ## 已完成的本地验证
 
 在无外网 Ubuntu 24.04 容器中使用实际固定版本程序、Redis 7.0 和 Nginx 1.24，验证了 42 篇原始计数、独立测试站点写入、HTTPS/CORS/缓存策略、重复安装保留新增访问、AOF 重启恢复和原有配置保护。systemd 单元通过 `systemd-analyze verify`。测试使用受信任的测试证书，并模拟 apt、systemctl 和 certbot 命令；真实 VPS 的包安装、systemd 运行、Let's Encrypt 签发和公网连接仍需通过部署报告核对。
