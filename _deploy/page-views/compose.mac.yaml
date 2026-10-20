@@ -1,0 +1,5 @@
+# 固定的 v2.8.8 镜像仅提供 amd64；M4 需要容器运行时支持该架构的兼容运行。
+# 可配合 Docker Desktop 使用；尚未在 M4 实机验证。
+services:
+  busuanzi:
+    platform: linux/amd64

@@ -6,6 +6,9 @@ _site
 .jekyll-cache
 .DS_Store
 __pycache__/
+_deploy/page-views/.env
+_deploy/page-views/*.resp
+_deploy/page-views/*.rdb
 # Obsidian：只共享 app.json（新文章位置、图片保存位置、链接格式）；插件和工作区状态留在本机，
 # 尤其是插件的 data.json 里可能有公众号 AppSecret 之类的密钥
 .obsidian/*

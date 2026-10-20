@@ -111,8 +111,8 @@ analytics:
 
 # 文章浏览量：仅在 production 启用；单篇可用 page_views: false 关闭
 page_views               : true
-# 使用支持列表查询的接口版不蒜子，从接入时重新计数；清空可恢复原版服务。
-page_views_api           : https://busuanzi.9420.ltd/api
+# 自建不蒜子接口；迁入公共接口原始计数，固定历史基数由前端另加一次。
+page_views_api           : https://stats.stile.cc/api
 
 # 按首篇已发布文章《使用MySQL的常规操作》的发布时间起算；固定保存，部署不会重置。
 site_launched_at         : "2021-11-21T16:46:00+08:00"

@@ -1,0 +1,88 @@
+name: stile-page-views
+
+services:
+  redis:
+    image: redis:7-alpine@sha256:858f009f9709ce576febc734aa78b8f6d624b82571f9ddb6bda4377c833b3499
+    restart: unless-stopped
+    mem_limit: 128m
+    command: [redis-server, --appendonly, "yes", --appendfsync, everysec]
+    volumes:
+      - redis-data:/data
+    networks: [database]
+    healthcheck:
+      test: [CMD, redis-cli, ping]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    logging: &logging
+      driver: json-file
+      options:
+        max-size: 5m
+        max-file: "3"
+
+  busuanzi:
+    image: xcsoft/busuanzi:v2.8.8@sha256:2edf1ff096cd62ec641087a9cbc09fb88ecb4fa91e79c845526817220c351d01
+    restart: unless-stopped
+    mem_limit: 128m
+    # 本站使用自己的 JS，无须运行上游修改 JS 文件的启动脚本。
+    entrypoint: [/app/busuanzi]
+    command: [-c, /app/config.yaml, -d, /app/dist]
+    read_only: true
+    security_opt: [no-new-privileges:true]
+    cap_drop: [ALL]
+    environment:
+      WEB_ADDRESS: 0.0.0.0:8080
+      WEB_CORS: https://stile.cc
+      WEB_DEBUG: "false"
+      WEB_LOG: "false"
+      REDIS_ADDRESS: redis:6379
+      REDIS_PREFIX: bsz
+      BSZ_EXPIRE: "0"
+      BSZ_PATHSTYLE: "true"
+      BSZ_ENCRYPT: MD516
+      BSZ_SECRET: ${BSZ_SECRET:?Generate .env as described in README.md}
+    ports:
+      - "127.0.0.1:${STATS_LOCAL_PORT:-18080}:8080"
+    networks: [database, frontend]
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      # 只探测容器自身；不受宿主机为外网配置的 HTTP 代理影响。
+      test: [CMD, wget, -Y, "off", -q, -O, /dev/null, http://127.0.0.1:8080/ping]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    logging: *logging
+
+  caddy:
+    profiles: [https]
+    image: caddy:2-alpine@sha256:d8542f48d34a9cf4e4c11a478865229840e87e4c96ea3f439101f31a5d35f75f
+    restart: unless-stopped
+    environment:
+      STATS_DOMAIN: ${STATS_DOMAIN:-stats.stile.cc}
+      # 保留外网代理配置，容器内部上游直接连接 Docker 网络。
+      NO_PROXY: ${NO_PROXY:-localhost,127.0.0.1},busuanzi
+      no_proxy: ${no_proxy:-localhost,127.0.0.1},busuanzi
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [frontend]
+    depends_on:
+      busuanzi:
+        condition: service_healthy
+    logging: *logging
+
+networks:
+  database:
+    internal: true
+  frontend:
+
+volumes:
+  redis-data:
+  caddy-data:
+  caddy-config:

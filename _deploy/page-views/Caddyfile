@@ -1,0 +1,47 @@
+{$STATS_DOMAIN:stats.stile.cc} {
+	header {
+		Cache-Control "no-store"
+		X-Robots-Tag "noindex"
+	}
+
+	@preflight {
+		path /api
+		method OPTIONS
+		header Origin https://stile.cc
+	}
+	handle @preflight {
+		header {
+			Access-Control-Allow-Origin "https://stile.cc"
+			Access-Control-Allow-Methods "GET, POST, OPTIONS"
+			Access-Control-Allow-Headers "x-bsz-referer"
+			Access-Control-Max-Age "86400"
+		}
+		respond "" 204
+	}
+
+	@counter {
+		path /api
+		method GET POST
+		header_regexp counter_referer x-bsz-referer ^https://stile[.]cc/[^?#]*$
+	}
+	handle @counter {
+		@foreign_origin {
+			header Origin *
+			not header Origin https://stile.cc
+		}
+		respond @foreign_origin "Forbidden" 403
+		reverse_proxy busuanzi:8080 {
+			header_down Cache-Control "no-store"
+		}
+	}
+
+	@health {
+		path /ping
+		method GET HEAD
+	}
+	handle @health {
+		reverse_proxy busuanzi:8080
+	}
+
+	respond "Not found" 404
+}

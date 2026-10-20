@@ -1,0 +1,62 @@
+{
+  "tagOwners": {
+    "tag:stile-vps": ["autogroup:admin"],
+    "tag:stile-deploy": ["autogroup:admin"]
+  },
+  "acls": [],
+  "grants": [
+    {
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:member"],
+      "ip": ["*"]
+    },
+    {
+      "src": ["tag:stile-deploy"],
+      "dst": ["tag:stile-vps"],
+      "ip": ["tcp:2912"]
+    }
+  ],
+  "ssh": [
+    {
+      "action": "check",
+      "src": ["autogroup:member"],
+      "dst": ["autogroup:self"],
+      "users": ["autogroup:nonroot", "root"]
+    }
+  ],
+  "tests": [
+    {
+      "src": "tag:stile-deploy",
+      "proto": "tcp",
+      "accept": ["tag:stile-vps:2912"],
+      "deny": [
+        "tag:stile-vps:22",
+        "tag:stile-vps:53",
+        "tag:stile-vps:80",
+        "tag:stile-vps:443",
+        "tag:stile-vps:8443",
+        "tag:stile-vps:8964",
+        "tag:stile-vps:9443",
+        "tag:stile-vps:18080"
+      ]
+    },
+    {
+      "src": "tag:stile-deploy",
+      "proto": "udp",
+      "deny": [
+        "tag:stile-vps:2912",
+        "tag:stile-vps:39847",
+        "tag:stile-vps:53306"
+      ]
+    },
+    {
+      "src": "tag:stile-vps",
+      "proto": "tcp",
+      "deny": [
+        "tag:stile-deploy:22",
+        "tag:stile-deploy:443",
+        "tag:stile-deploy:2912"
+      ]
+    }
+  ]
+}

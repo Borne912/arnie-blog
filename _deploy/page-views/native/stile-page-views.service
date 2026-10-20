@@ -1,0 +1,41 @@
+[Unit]
+Description=STiLE page-view API
+Wants=stile-page-views-redis.service
+After=network.target stile-page-views-redis.service
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+User=stile-stats
+Group=stile-stats
+WorkingDirectory=/opt/stile-page-views/app
+EnvironmentFile=/etc/stile-page-views/service.env
+Environment=WEB_ADDRESS=127.0.0.1:18080
+Environment=WEB_CORS=https://stile.cc
+Environment=WEB_DEBUG=false
+Environment=WEB_LOG=false
+Environment=REDIS_ADDRESS=127.0.0.1:16379
+Environment=REDIS_PREFIX=bsz
+Environment=BSZ_EXPIRE=0
+Environment=BSZ_PATHSTYLE=true
+Environment=BSZ_ENCRYPT=MD516
+ExecStart=/opt/stile-page-views/app/busuanzi -c /opt/stile-page-views/app/config.yaml -d /opt/stile-page-views/app/dist
+Restart=always
+RestartSec=3
+TimeoutStopSec=15
+UMask=0077
+MemoryMax=128M
+NoNewPrivileges=true
+PrivateTmp=true
+PrivateDevices=true
+ProtectSystem=strict
+ProtectHome=true
+ProtectKernelTunables=true
+ProtectKernelModules=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target
