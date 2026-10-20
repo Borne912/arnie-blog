@@ -54,36 +54,172 @@
 }
 
 // 让正文字体稍微大一些，行距保持舒适
+.page__content {
+    overflow-wrap: anywhere;
+}
+
 .page__content p,
 .page__content li,
 .page__content blockquote,
 .page__content table,
 .page__content td,
 .page__content th {
-    font-size: 18px !important; // 适当调整到 15.5px
-    line-height: 1.8 !important; // 增加行距，让阅读更舒适
+    font-size: 18px;
+    line-height: 1.8;
 }
 
 // 让小标题字体适当放大，增强层次感
 .page__content h2 {
-    font-size: 24px !important;
-    font-weight: bold !important;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .page__content h3 {
-    font-size: 21px !important;
-    font-weight: bold !important;
+    font-size: 21px;
+    font-weight: bold;
 }
 
 .page__content h4 {
-    font-size: 19px !important;
-    font-weight: bold !important;
+    font-size: 19px;
+    font-weight: bold;
 }
 
 // 代码块字体不变，避免影响排版
 .page__content code,
 .page__content pre {
-    font-size: 16px !important;
+    font-size: 16px;
+}
+
+// 标题、面包屑和正文使用相同的外层宽度，避免加宽后仍挤在旧的 1280px 容器内
+.page__hero--overlay .wrapper,
+.breadcrumbs {
+    max-width: $max-width;
+}
+
+// 中等屏幕让目录回到正文上方；无目录的页面也不再预留空的右栏
+.layout--single {
+    .page {
+        padding-inline-end: 0;
+    }
+
+    .sidebar__right {
+        position: static;
+        float: none;
+        width: auto;
+        margin: 0 0 1.5em;
+        padding: 0;
+        top: auto;
+        inset-inline-end: auto;
+
+        .toc .toc__menu {
+            overflow-y: auto;
+            max-height: 12rem;
+            overscroll-behavior: contain;
+            scrollbar-width: thin;
+        }
+    }
+
+    @include breakpoint($large) {
+        &:not(:has(#main > .sidebar)) {
+            .page,
+            .breadcrumbs ol {
+                width: 100%;
+            }
+        }
+    }
+}
+
+// 只有空间足够时才排成三栏，目录保留独立宽度和与正文的间距
+@include breakpoint($site-toc-breakpoint) {
+    .layout--single:not(.wide) {
+        .page:has(.sidebar__right) {
+            padding-inline-end: $site-toc-width;
+        }
+
+        .sidebar__right {
+            position: absolute;
+            top: 0;
+            inset-inline-end: 0;
+            width: $site-toc-width;
+            margin-inline-end: -$site-toc-width;
+            padding-inline-start: 28px;
+
+            &.sticky {
+                position: sticky;
+                top: 1.5rem;
+                float: inline-end;
+            }
+
+            .toc .toc__menu {
+                max-height: calc(100vh - 6rem);
+            }
+        }
+    }
+}
+
+// 目录使用独立字号和轻量导航样式，不继承正文列表的 18px 字号和大行距
+.page__content .toc {
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: none;
+    font-size: 14px;
+    line-height: 1.5;
+
+    .nav__title {
+        margin: 0;
+        padding: 12px 14px;
+        border-bottom: 1px solid $border-color;
+        color: $text-color;
+        background: mix($primary-color, $background-color, 8%);
+        font-size: 15px;
+        line-height: 1.5;
+        text-transform: none;
+    }
+
+    .toc__menu,
+    .toc__menu li,
+    .toc__menu ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        font-size: inherit;
+        line-height: inherit;
+    }
+
+    .toc__menu {
+        padding: 6px 0;
+    }
+
+    .toc__menu a {
+        padding-block: 7px;
+        border-bottom: 0;
+        border-inline-start: 2px solid transparent;
+        color: $muted-text-color;
+        background: transparent;
+        font-weight: normal;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+
+        &:hover,
+        &:focus-visible {
+            color: $text-color;
+            background: mix($primary-color, $background-color, 6%);
+        }
+    }
+
+    .toc__menu > li > a {
+        font-weight: 600;
+    }
+
+    .toc__menu .active > a {
+        border-inline-start-color: $primary-color;
+        color: $text-color;
+        background: mix($primary-color, $background-color, 12%);
+    }
+
+    code {
+        font-size: 0.9em;
+    }
 }
 
 // 分享按钮、社交图标的品牌色（主题没有这几种，原先靠复制整份 _buttons.scss / _utilities.scss 实现）

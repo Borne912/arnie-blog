@@ -5,3 +5,9 @@ $system-cjk: -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB
   "Helvetica Neue", Arial, sans-serif;
 $sans-serif: $system-cjk;
 $serif: $system-cjk;
+
+// 扩大阅读区域；作者栏与目录栏分别控制，不再共用主题的 300px 宽度
+$max-width: 1600px;
+$right-sidebar-width: 200px;
+$site-toc-width: 300px;
+$site-toc-breakpoint: 1360px;
