@@ -1,4 +1,5 @@
 import importlib.util
+from datetime import datetime, timedelta, timezone
 from http.client import IncompleteRead
 import io
 import json
@@ -136,6 +137,117 @@ class BackupTests(unittest.TestCase):
                 self.run_backup(error)
             self.assertEqual(self.output.read_bytes(), previous)
             self.assertFalse(self.output.with_suffix(".tmp").exists())
+
+    def test_partial_progress_survives_failure_and_only_missing_articles_are_retried(self):
+        first, second = self.manifest["urls"]
+        calls = []
+        reply = self.reply(15)
+
+        def partial(request, timeout):
+            url = request.get_header("X-bsz-referer")
+            calls.append(url)
+            if url == second:
+                raise TimeoutError("temporarily unavailable")
+            return reply(request, timeout)
+
+        previous = self.output.read_bytes()
+        with self.assertRaises(TimeoutError):
+            self.run_backup(partial)
+        self.assertEqual(self.output.read_bytes(), previous)
+        self.assertEqual(calls.count(first), 1)
+        self.assertEqual(calls.count(second), 4)
+        checkpoint = self.output.with_name("page-views.pending.json")
+        saved = json.loads(checkpoint.read_text())
+        self.assertEqual(set(saved["samples"]), {first})
+        observed = saved["samples"][first]["saved_at"]
+        calls.clear()
+
+        def recovered(request, timeout):
+            calls.append(request.get_header("X-bsz-referer"))
+            return self.reply(17)(request, timeout)
+
+        self.run_backup(recovered)
+        self.assertEqual(calls, [second])
+        data = json.loads(self.output.read_text())
+        self.assertEqual(data["counts"], {first: 15, second: 17})
+        self.assertEqual(data["saved_at"], observed)
+        self.assertEqual(data["observed_at"][first], observed)
+        self.assertFalse(checkpoint.exists())
+
+    def test_failed_article_can_recover_in_a_later_pass_without_rereading_successes(self):
+        first, second = self.manifest["urls"]
+        calls = []
+        reply = self.reply(15)
+
+        def respond(request, timeout):
+            url = request.get_header("X-bsz-referer")
+            calls.append(url)
+            if url == second and calls.count(second) == 1:
+                raise TimeoutError("try a later pass")
+            return reply(request, timeout)
+
+        self.run_backup(respond)
+        self.assertEqual(calls.count(first), 1)
+        self.assertEqual(calls.count(second), 2)
+        self.assertEqual(len(json.loads(self.output.read_text())["counts"]), 2)
+
+    def test_old_foreign_and_decreased_checkpoint_samples_are_not_reused(self):
+        first = self.manifest["urls"][0]
+        checkpoint = self.output.with_name("page-views.pending.json")
+        valid = {
+            "manifest": backup.checkpoint_context(self.manifest),
+            "samples": {first: {"page_pv": 12, "site_pv": 100, "saved_at": datetime.now(timezone.utc).isoformat()}},
+        }
+        for change in ("old", "foreign", "decreased", "invalid", "future"):
+            saved = json.loads(json.dumps(valid))
+            sample = saved["samples"][first]
+            if change == "old":
+                sample["saved_at"] = (datetime.now(timezone.utc) - timedelta(minutes=31)).isoformat()
+            elif change == "foreign":
+                saved["manifest"]["api"] = "https://other.example.test/api"
+            elif change == "decreased":
+                sample["page_pv"] = 9
+            elif change == "future":
+                sample["saved_at"] = (datetime.now(timezone.utc) + timedelta(minutes=1)).isoformat()
+            else:
+                sample["page_pv"] = True
+            with self.subTest(change=change):
+                checkpoint.write_text(json.dumps(saved))
+                self.assertEqual(backup.load_checkpoint(checkpoint, self.manifest, self.previous), {})
+
+    def test_permanent_http_error_does_not_trigger_later_passes(self):
+        self.manifest["urls"] = self.manifest["urls"][:1]
+        previous = self.output.read_bytes()
+        calls = []
+
+        def forbidden(request, timeout):
+            calls.append(request)
+            raise HTTPError(request.full_url, 403, "forbidden", {}, None)
+
+        with self.assertRaises(HTTPError):
+            self.run_backup(forbidden)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(self.output.read_bytes(), previous)
+
+    def test_collection_budget_prevents_starting_more_requests(self):
+        with self.assertRaisesRegex(TimeoutError, "time budget"):
+            backup.snapshot(self.manifest, self.previous, reader=lambda *args: self.fail("Unexpected request"), deadline=0)
+
+    def test_recovery_pass_respects_server_retry_after(self):
+        self.manifest["urls"] = self.manifest["urls"][:1]
+        calls = []
+
+        def reader(url, headers):
+            calls.append(url)
+            if len(calls) == 1:
+                raise HTTPError(url, 429, "rate limit", {"Retry-After": "120"}, None)
+            return {"success": True, "data": {"page_pv": 15, "site_pv": 100}}
+
+        with patch("time.sleep") as sleep:
+            data = backup.snapshot(self.manifest, self.previous, reader=reader)
+        self.assertIn(call(120), sleep.call_args_list)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(data["counts"][self.manifest["urls"][0]], 15)
 
     def test_invalid_counts_preserve_last_good_file(self):
         previous = self.output.read_bytes()

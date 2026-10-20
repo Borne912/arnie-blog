@@ -26,6 +26,7 @@ jobs:
         with:
           ref: main
       - name: Prepare backup branch
+        id: prepare
         shell: bash
         run: |
           set -euo pipefail
@@ -40,17 +41,24 @@ jobs:
             git -C "$backup_dir" switch --orphan page-views-backups
           fi
       - name: Read article counters
+        id: counters
         run: >-
           python3 _scripts/backup_page_views.py
           --manifest https://stile.cc/assets/data/page-views.json
           --output "$RUNNER_TEMP/page-views-backup/page-views.json"
       - name: Save backup to GitHub
+        if: ${{ !cancelled() && steps.prepare.outcome == 'success' }}
         shell: bash
         run: |
           set -euo pipefail
           backup_dir="$RUNNER_TEMP/page-views-backup"
-          if [ ! -f "$backup_dir/page-views.json" ]; then exit 0; fi
-          git -C "$backup_dir" add page-views.json
+          for file in page-views.json page-views.pending.json; do
+            if [ -f "$backup_dir/$file" ] || git -C "$backup_dir" ls-files --error-unmatch "$file" >/dev/null 2>&1; then
+              git -C "$backup_dir" add -A -- "$file"
+            fi
+          done
           if git -C "$backup_dir" diff --cached --quiet; then exit 0; fi
-          git -C "$backup_dir" -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "Back up article page views"
+          message="Back up article page views"
+          if [ -f "$backup_dir/page-views.pending.json" ]; then message="Save partial article counter checkpoint"; fi
+          git -C "$backup_dir" -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m "$message"
           git -C "$backup_dir" push origin HEAD:page-views-backups
