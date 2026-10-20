@@ -75,6 +75,26 @@ class ReadJsonTests(unittest.TestCase):
         self.assertEqual(opening.call_count, 3)
         self.assertEqual(self.sleep.call_args_list, [call(2), call(4)])
 
+    def test_http_failure_logs_routing_headers_without_secrets_or_body(self):
+        headers = {
+            "Server": "cloudflare", "CF-Ray": "test-ray", "CF-Mitigated": "challenge",
+            "Set-Cookie": "private-cookie", "Authorization": "private-token",
+        }
+        body = io.BytesIO(b"private response body")
+        error = HTTPError(self.url, 403, "forbidden", headers, body)
+        with patch.object(backup, "urlopen", side_effect=error) as opening:
+            with self.assertRaises(HTTPError) as raised:
+                backup.read_json(self.url)
+        self.assertIs(raised.exception, error)
+        self.assertEqual(opening.call_count, 1)
+        self.assertEqual(body.tell(), 0)
+        logged = self.stderr.getvalue()
+        self.assertIn('"CF-Mitigated": "challenge"', logged)
+        self.assertIn('"CF-Ray": "test-ray"', logged)
+        self.assertNotIn("private", logged)
+        self.assertNotIn("Authorization", logged)
+        self.sleep.assert_not_called()
+
     def test_invalid_json_fails_without_retrying(self):
         with patch.object(backup, "urlopen", return_value=io.BytesIO(b"not json")) as opening:
             with self.assertRaises(json.JSONDecodeError):

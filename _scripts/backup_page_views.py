@@ -19,6 +19,10 @@ from urllib.request import Request, urlopen
 
 TRANSIENT_HTTP = (408, 429, 500, 502, 503, 504)
 NETWORK_ERRORS = (URLError, TimeoutError, ConnectionError, IncompleteRead)
+DIAGNOSTIC_HEADERS = (
+    "Server", "Content-Type", "CF-Ray", "CF-Mitigated", "CF-Cache-Status",
+    "Cache-Control", "Access-Control-Allow-Origin",
+)
 
 
 def is_transient(error):
@@ -46,6 +50,11 @@ def read_json(url, headers=None, *, attempts=3, timeout=20):
             with urlopen(request, timeout=timeout) as response:
                 return json.load(response)
         except HTTPError as error:
+            # 仅记录公开的路由诊断头，不输出 Cookie、令牌或响应正文。
+            details = {"status": error.code, "url": url}
+            if error.headers:
+                details.update({name: error.headers[name][:200] for name in DIAGNOSTIC_HEADERS if name in error.headers})
+            print("HTTP response: " + json.dumps(details, ensure_ascii=False), file=sys.stderr)
             if error.code not in TRANSIENT_HTTP or attempt == attempts - 1:
                 raise
             delay = max(2 ** (attempt + 1), retry_after(error))
